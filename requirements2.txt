@@ -1,0 +1,15 @@
+streamlit
+transformers
+torch          
+pandas
+numpy
+scikit-learn
+evaluate
+datasets
+nltk            
+gspread
+gspread-dataframe
+google-auth
+google-auth-oauthlib
+joblib 
+spacy
