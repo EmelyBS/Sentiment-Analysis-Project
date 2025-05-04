@@ -62,8 +62,9 @@ The fine-tuned BERT model achieved high accuracy in distinguishing between posit
 
 ---
 
-## Contributor
+## Contributors
 
 Developed as a Capstone Project in Industrial Engineering and Managment specialized in Information Systems. 
-Author: **Emely Ben-Sadon, Yarin Horev**    
+Author: **Emely Ben-Sadon, Yarin Horev**   
+Director: **Dr. Dima Alberg**   
 Tech stack includes: Python, Scikit-learn, PyTorch, Hugging Face Transformers, Matplotlib, and Streamlit.
