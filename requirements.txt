@@ -1,13 +1,16 @@
 # Essential for the Streamlit app
-streamlit==1.25.0
+streamlit
 
 # NLP and model
-transformers==4.31.0
-torch==2.0.1
+transformers
+torch
 
 # Data handling
 pandas==2.2.2
-numpy==1.24.4  # Compatible with pandas 2.2.2 and torch
+numpy>=1.26 # Compatible with pandas 2.2.2 and torch
+
+#Tokenizer support
+scipy>=1.11
 
 # Google Sheets integration
 gspread==5.12.0
