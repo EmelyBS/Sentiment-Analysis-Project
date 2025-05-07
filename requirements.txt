@@ -19,3 +19,5 @@ oauth2client==4.1.3
 # Optional but useful (e.g., logging/debugging)
 absl-py==1.4.0
 huggingface_hub
+# Optional for HTTP requests if needed
+requests
