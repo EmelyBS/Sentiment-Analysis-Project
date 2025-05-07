@@ -18,7 +18,7 @@ st.markdown(
 )
 
 # Add an image with reduced width and align it to the right, replace deprecated 'use_column_width' with 'use_container_width'
-st.image("diagram-export-5-4-2025-7_14_23-PM.png", width=400, use_container_width=True)
+st.image("Sentiment Analysis cover pic.jpg", width=400, use_container_width=True)
 
 # Make the text bold and set the same size as "History" section, remove the ** from "How was your experience"
 st.markdown("<h4 style='text-align: center;'>How was your experience?</h4>", unsafe_allow_html=True)
