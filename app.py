@@ -30,7 +30,7 @@ st.image("Sentiment Analysis cover pic.jpg", width=400, use_container_width=True
 st.markdown(
     """
     <p style="text-align: left; font-size: 12px">
-        Image created by Yarin Horev using DALL·E, an AI system by OpenAI, Date: March 3, 2025.
+        Image created by Yarin Horev using DALL·E (AI system by OpenAI), Date: March 3, 2025.
     </p>
     """,
     unsafe_allow_html=True
