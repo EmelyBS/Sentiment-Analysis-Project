@@ -26,12 +26,22 @@ st.markdown(
 
 # Add an image with reduced width and align it to the right
 st.image("Sentiment Analysis cover pic.jpg", width=400, use_container_width=True)  # Ensure the image path is correct
+# Add credits below the image with the new text, in smaller font, and sideways
+st.markdown(
+    """
+    <p style="text-align: center; font-size: 12px; transform: rotate(-90deg);">
+        Image created by Yarin Horev using DALL·E, an AI system by OpenAI.<br>
+        Date: March 3, 2025.
+    </p>
+    """,
+    unsafe_allow_html=True
+)
 
 # Make the text bold and set the same size as "History" section
 st.markdown("<h4 style='text-align: center;'>How was your experience?</h4>", unsafe_allow_html=True)
 
-# User input text box
-user_input = st.text_area("Enter your review here:")
+# User input text box with session state to clear the input
+user_input = st.text_area("Enter your review here:", key="user_input")
 
 # Sentiment Analysis function
 def sentiment_analyzer(text):
@@ -81,6 +91,10 @@ if st.button("Analyze Sentiment"):
             "Review": user_input,
             "Sentiment": sentiment_label
         })
+
+        # Clear the text box by resetting the session state value for "user_input"
+        st.session_state.user_input = ""  # Resetting the input
+
     else:
         st.warning("Please enter a review to analyze.")
 
