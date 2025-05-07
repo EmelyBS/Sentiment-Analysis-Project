@@ -3,11 +3,16 @@ import torch
 from transformers import BertForSequenceClassification, BertTokenizer
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
-# Load model and tokenizer
-model_dir = "C:\\Users\\emely\\OneDrive\\Desktop\\Bachelor Project EmelYarin\\best_fine_tuned_bert"
-
+# Use relative path for Streamlit deployment
+model_dir = "best_fine_tuned_bert"  # This is the folder in your project structure
 tokenizer = AutoTokenizer.from_pretrained(model_dir)
 model = AutoModelForSequenceClassification.from_pretrained(model_dir)
+
+
+# Load model and tokenizer
+#model_dir = "C:\\Users\\emely\\OneDrive\\Desktop\\Bachelor Project EmelYarin\\best_fine_tuned_bert"
+#tokenizer = AutoTokenizer.from_pretrained(model_dir)
+#model = AutoModelForSequenceClassification.from_pretrained(model_dir)
 
 # Apply custom styling for the title (centered)
 st.markdown(
