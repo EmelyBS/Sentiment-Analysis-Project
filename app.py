@@ -1,12 +1,19 @@
 import streamlit as st
 import torch
-from transformers import BertForSequenceClassification, BertTokenizer
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
-# Use relative path for Streamlit deployment
-model_dir = "best_fine_tuned_bert"  # This is the folder in your project structure
-tokenizer = AutoTokenizer.from_pretrained(model_dir)
-model = AutoModelForSequenceClassification.from_pretrained(model_dir)
+# Load model and tokenizer from Hugging Face Hub
+model_repo = "emelybs/Sentiment_Analysis_Project_BA"  # Use your model's repository name here
+
+# Try loading the model and tokenizer with error handling
+try:
+    tokenizer = AutoTokenizer.from_pretrained(model_repo)
+    model = AutoModelForSequenceClassification.from_pretrained(model_repo, 
+                                                              revision="main", 
+                                                              use_safetensors=True)
+except Exception as e:
+    st.error(f"Error loading model: {e}")
+    st.stop()  # Stop further execution if model fails to load
 
 # Apply custom styling for the title (centered)
 st.markdown(
@@ -17,10 +24,10 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Add an image with reduced width and align it to the right, replace deprecated 'use_column_width' with 'use_container_width'
-st.image("Sentiment Analysis cover pic.jpg", width=400, use_container_width=True)
+# Add an image with reduced width and align it to the right
+st.image("Sentiment Analysis cover pic.jpg", width=400, use_container_width=True)  # Ensure the image path is correct
 
-# Make the text bold and set the same size as "History" section, remove the ** from "How was your experience"
+# Make the text bold and set the same size as "History" section
 st.markdown("<h4 style='text-align: center;'>How was your experience?</h4>", unsafe_allow_html=True)
 
 # User input text box
@@ -60,10 +67,7 @@ if st.button("Analyze Sentiment"):
         sentiment_label = "Positive 😊" if sentiment == 1 else "Negative 😞"
 
         # Conditional color for prediction box with lighter shades
-        if sentiment == 1:
-            prediction_color = "#66cc66"  # Light Green
-        else:
-            prediction_color = "#ff6666"  # Light Red
+        prediction_color = "#66cc66" if sentiment == 1 else "#ff6666"  # Light Green or Light Red
 
         # Display the result with a background color based on sentiment
         st.markdown(f"""
