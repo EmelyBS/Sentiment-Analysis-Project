@@ -8,12 +8,6 @@ model_dir = "best_fine_tuned_bert"  # This is the folder in your project structu
 tokenizer = AutoTokenizer.from_pretrained(model_dir)
 model = AutoModelForSequenceClassification.from_pretrained(model_dir)
 
-
-# Load model and tokenizer
-#model_dir = "C:\\Users\\emely\\OneDrive\\Desktop\\Bachelor Project EmelYarin\\best_fine_tuned_bert"
-#tokenizer = AutoTokenizer.from_pretrained(model_dir)
-#model = AutoModelForSequenceClassification.from_pretrained(model_dir)
-
 # Apply custom styling for the title (centered)
 st.markdown(
     """
@@ -24,7 +18,7 @@ st.markdown(
 )
 
 # Add an image with reduced width and align it to the right, replace deprecated 'use_column_width' with 'use_container_width'
-st.image("C:\\Users\\emely\\OneDrive\\Desktop\\Bachelor Project EmelYarin\\Sentiment Analysis App\\Sentiment Analysis cover pic.jpg", width=400, use_container_width=True)
+st.image("diagram-export-5-4-2025-7_14_23-PM.png", width=400, use_container_width=True)
 
 # Make the text bold and set the same size as "History" section, remove the ** from "How was your experience"
 st.markdown("<h4 style='text-align: center;'>How was your experience?</h4>", unsafe_allow_html=True)
