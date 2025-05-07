@@ -1,49 +1,17 @@
-streamlit
-transformers
-torch
-pandas
-gspread
-oauth2client
-absl-py==1.4.0
-accelerate==1.6.0
-aiohttp==3.11.15
-albumentations==2.0.6
-altair==5.5.0
-attrs==25.3.0
-backcall==0.2.0
-beautifulsoup4==4.13.4
-bokeh==3.7.2
-cachetools==5.5.2
-certifi==2025.4.26
-cffi==1.17.1
-cloudpickle==3.1.1
-Flask==3.1.0
-folium==0.19.5
-google-auth==2.38.0
-google-auth-httplib2==0.2.0
-google-cloud-aiplatform==1.91.0
-google-cloud-bigquery==3.31.0
-google-cloud-storage==2.19.0
-google-colab==1.0.0
-gradio==3.1.1
-grpcio==1.71.0
-h5py==3.13.0
-huggingface-hub==0.30.2
-ipykernel==6.17.1
-jupyter-client==6.1.12
-keras==3.8.0
-langchain==0.3.24
-matplotlib==3.10.0
-nltk==3.9.1
-numpy==2.0.2
-opt_einsum==3.4.0
-pandas==2.2.2
-plotly==5.24.1
-protobuf==5.29.4
-scikit-learn==1.2.1
-seaborn==0.11.2
-streamlit==1.9.0
-torch==2.0.1
-transformers==4.31.0
-tensorflow==2.14.0
+# Essential for the Streamlit app
+streamlit==1.25.0
 
+# NLP and model
+transformers==4.31.0
+torch==2.0.1
+
+# Data handling
+pandas==2.2.2
+numpy==1.24.4  # Compatible with pandas 2.2.2 and torch
+
+# Google Sheets integration
+gspread==5.12.0
+oauth2client==4.1.3
+
+# Optional but useful (e.g., logging/debugging)
+absl-py==1.4.0
