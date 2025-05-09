@@ -21,7 +21,7 @@ except Exception as e:
 
 # Sidebar navigation
 st.sidebar.title("Navigation")
-page = st.sidebar.radio("Go to", ["📊 BI Dashboard", "🖥️ Sentiment Analysis"])
+page = st.sidebar.radio("Go to", ["BI Dashboard", "Sentiment Analysis Interface"])
 
 # Page 1: Sentiment Analysis
 if page == "🖥️ Sentiment Analysis":
@@ -101,13 +101,13 @@ if page == "🖥️ Sentiment Analysis":
 # Page 2: BI Dashboard
 elif page == "📊 BI Dashboard":
     st.title("Business Intelligence Dashboard")
-    st.write("Here is the BI dashboard with insights on routes, reviews, and sentiment.")
+    st.write("Insights on routes, reviews, and sentiment and their connections.")
 
     # Try embedding dashboard using HTML iframe
     st.markdown(
         """
         <iframe src="https://lookerstudio.google.com/embed/reporting/b5f009bf-6c85-41b0-b70e-af26d686eb68/page/G6bFF"
-                width="100%" height="800" style="border:none;">
+                width="950" height="650" style="border:none;">
         </iframe>
         """,
         unsafe_allow_html=True
