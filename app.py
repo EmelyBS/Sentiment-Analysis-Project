@@ -1,4 +1,4 @@
-import streamlit as st
+htimport streamlit as st
 import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import pandas as pd
@@ -34,7 +34,7 @@ if page == "SA Interface":
     )
 
     # Add an image
-    st.image("Sentiment Analysis cover pic.jpg", width=300, use_container_width=True)
+    st.image("Sentiment Analysis cover pic.jpg", width=300, height = 650, use_container_width=True)
 
     # Add credits
     st.markdown(
