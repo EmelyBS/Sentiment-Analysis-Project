@@ -21,10 +21,10 @@ except Exception as e:
 
 # Sidebar navigation
 st.sidebar.title("Navigation")
-page = st.sidebar.radio("Go to", ["BI Dashboard", "Sentiment Analysis Interface"])
+page = st.sidebar.radio("Go to", ["BI Dashboard", "SA Interface"])
 
 # Page 1: Sentiment Analysis
-if page == "Sentiment Analysis":
+if page == "SA Interface":
     st.markdown(
         """
         <h3 style="text-align: center;">Sentiment Analysis on Airline Reviews</h3>
@@ -40,7 +40,7 @@ if page == "Sentiment Analysis":
     st.markdown(
         """
         <p style="text-align: left; font-size: 12px">
-            Image created by Yarin Horev using DALL·E (AI system by OpenAI), Date: March 3, 2025.
+            Image created by Yarin Horev using Ideogram (AI system by OpenAI), Date: March 3, 2025.
         </p>
         """,
         unsafe_allow_html=True
