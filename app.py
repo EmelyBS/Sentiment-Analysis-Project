@@ -24,7 +24,7 @@ st.sidebar.title("Navigation")
 page = st.sidebar.radio("Go to", ["BI Dashboard", "Sentiment Analysis Interface"])
 
 # Page 1: Sentiment Analysis
-if page == "🖥️ Sentiment Analysis":
+if page == "Sentiment Analysis":
     st.markdown(
         """
         <h3 style="text-align: center;">Sentiment Analysis on Airline Reviews</h3>
@@ -99,7 +99,7 @@ if page == "🖥️ Sentiment Analysis":
         st.dataframe(history_df)
 
 # Page 2: BI Dashboard
-elif page == "📊 BI Dashboard":
+elif page == "BI Dashboard":
     st.title("Business Intelligence Dashboard")
     st.write("Insights on routes, reviews, and sentiment and their connections.")
 
