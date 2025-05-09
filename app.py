@@ -32,10 +32,14 @@ if page == "SA Interface":
         """,
         unsafe_allow_html=True
     )
-
-    # Add an image
-    st.image("Sentiment Analysis cover pic.jpg", width=300, height = 650, use_container_width=True)
-
+    st.markdown(
+        """
+        <div style="text-align: center;">
+            <img src="Sentiment Analysis cover pic.jpg" alt="Sentiment Analysis" style="height: 650px; width: auto;">
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
     # Add credits
     st.markdown(
         """
