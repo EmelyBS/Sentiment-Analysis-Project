@@ -15,6 +15,9 @@ try:
     model = AutoModelForSequenceClassification.from_pretrained(model_repo, 
                                                               revision="main", 
                                                               use_safetensors=True)
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model.to(device)
+    model.eval()
 except Exception as e:
     st.error(f"Error loading model: {e}")
     st.stop()
