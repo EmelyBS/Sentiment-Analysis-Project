@@ -33,7 +33,7 @@ if page == "SA Interface":
         unsafe_allow_html=True
     )
       # Add an image
-    st.image("Sentiment Analysis cover pic.jpg", use_container_width=True)
+    st.image("Sentiment Analysis cover pic.jpg", use_container_width=False)
 
     # Add credits
     st.markdown(
