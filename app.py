@@ -34,15 +34,16 @@ if main_section == "SA Interface":
 
     st.image("Sentiment Analysis cover pic.jpg", width=400)
 
-    st.markdown(
-        """
-        <p style="text-align: left; font-size: 12px">
+   st.markdown(
+    """
+    <div style="text-align: center; font-size: 12px; width: 100%; line-height: 1.2; margin: 0; padding: 2px;">
+        <p>
             Image created by Yarin Horev using Ideogram (AI system by OpenAI), Date: March 3, 2025.
         </p>
-        """,
-        unsafe_allow_html=True
+    </div>
+    """,
+    unsafe_allow_html=True
     )
-
     user_input = st.text_area("Enter your review here:")
 
     def sentiment_analyzer(text):
