@@ -102,10 +102,12 @@ elif main_section == "BI Dashboards":
 
         st.markdown(
             """
-            <iframe width="1050" height="800" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
-                    frameborder="0" style="border:0" allowfullscreen 
-                    sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
-            </iframe>
+            <div style="text-align: center;">
+                <iframe width="1100" height="800" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
+                        frameborder="0" style="border:0;" allowfullscreen 
+                        sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
+                </iframe>
+            </div>
             """,
             unsafe_allow_html=True
         )
@@ -117,12 +119,13 @@ elif main_section == "BI Dashboards":
     elif dashboard_page == "Route Insights":
         st.title("BI Dashboard: Route Insights")
         st.write("Insights to route-specific review patterns and satisfaction levels of airline customers.")
-
         st.markdown(
             """
-            <iframe src="https://lookerstudio.google.com/embed/reporting/b5f009bf-6c85-41b0-b70e-af26d686eb68/page/G6bFF"
-                    width="950" height="650" style="border:none;">
-            </iframe>
+            <div style="text-align: center;">
+                <iframe src="https://lookerstudio.google.com/embed/reporting/b5f009bf-6c85-41b0-b70e-af26d686eb68/page/G6bFF"
+                        width="1100" height="800" style="border:none;">
+                </iframe>
+            </div>
             """,
             unsafe_allow_html=True
         )
