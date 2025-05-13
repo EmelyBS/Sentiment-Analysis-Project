@@ -7,24 +7,23 @@ import pandas as pd
 st.set_page_config(layout="wide", initial_sidebar_state="expanded")
 
 # Load model and tokenizer from Hugging Face Hub
-model_repo = "emelybs/Sentiment_Analysis_Project_BA"  # Use your model's repository name here
+model_repo = "emelybs/Sentiment_Analysis_Project_BA"
 
-# Try loading the model and tokenizer with error handling
 try:
     tokenizer = AutoTokenizer.from_pretrained(model_repo)
-    model = AutoModelForSequenceClassification.from_pretrained(model_repo, 
-                                                              revision="main", 
-                                                              use_safetensors=True)
+    model = AutoModelForSequenceClassification.from_pretrained(
+        model_repo, revision="main", use_safetensors=True
+    )
 except Exception as e:
     st.error(f"Error loading model: {e}")
     st.stop()
 
 # Sidebar navigation
 st.sidebar.title("Navigation")
-page = st.sidebar.radio("Go to", ["BI Dashboard", "SA Interface"])
+main_section = st.sidebar.radio("Choose Section", ["SA Interface", "BI Dashboards"])
 
 # Page 1: Sentiment Analysis
-if page == "SA Interface":
+if main_section == "SA Interface":
     st.markdown(
         """
         <h3 style="text-align: center;">Sentiment Analysis on Airline Reviews</h3>
@@ -32,10 +31,9 @@ if page == "SA Interface":
         """,
         unsafe_allow_html=True
     )
-      # Add an image
-    st.image("Sentiment Analysis cover pic.jpg", use_container_width=False)
 
-    # Add credits
+    st.image("Sentiment Analysis cover pic.jpg", width=400)
+
     st.markdown(
         """
         <p style="text-align: left; font-size: 12px">
@@ -45,17 +43,14 @@ if page == "SA Interface":
         unsafe_allow_html=True
     )
 
-    # User input text box
     user_input = st.text_area("Enter your review here:")
 
-    # Sentiment Analysis function
     def sentiment_analyzer(text):
         inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True)
         outputs = model(**inputs)
         predictions = torch.argmax(outputs.logits, dim=-1).item()
         return predictions
 
-    # Button style
     st.markdown("""
         <style>
             .stButton>button {
@@ -97,22 +92,41 @@ if page == "SA Interface":
         history_df = pd.DataFrame(st.session_state.history)
         st.dataframe(history_df)
 
-# Page 2: BI Dashboard
-elif page == "BI Dashboard":
-    st.title("Business Intelligence Dashboard")
-    st.write("Insights on routes, reviews, and sentiment and their connections.")
+# Page 2: BI Dashboards
+elif main_section == "BI Dashboards":
+    dashboard_page = st.sidebar.radio("Select a BI Dashboard", ["Sentiment Trends", "Route Insights"])
 
-    # Try embedding dashboard using HTML iframe
-    st.markdown(
-        """
-        <iframe src="https://lookerstudio.google.com/embed/reporting/b5f009bf-6c85-41b0-b70e-af26d686eb68/page/G6bFF"
-                width="950" height="650" style="border:none;">
-        </iframe>
-        """,
-        unsafe_allow_html=True
-    )
+    if dashboard_page == "Sentiment Trends":
+        st.title("BI Dashboard: Sentiment Trends")
+        st.write("Insights on sentiment and customer experience metrics.")
 
-    # Fallback link
-    st.markdown(
-        "[Click here to view the BI Dashboard if it doesn't load above.](https://lookerstudio.google.com/reporting/b5f009bf-6c85-41b0-b70e-af26d686eb68/page/G6bFF)"
-    )
+        st.markdown(
+            """
+            <iframe src="https://lookerstudio.google.com/embed/reporting/b5f009bf-6c85-41b0-b70e-af26d686eb68/page/G6bFF"
+                    width="950" height="650" style="border:none;">
+            </iframe>
+            """,
+            unsafe_allow_html=True
+        )
+
+        st.markdown(
+            "[Click here to view the Sentiment Trends dashboard in a new tab.](https://lookerstudio.google.com/reporting/b5f009bf-6c85-41b0-b70e-af26d686eb68/page/G6bFF)"
+        )
+
+    elif dashboard_page == "Route Insights":
+        st.title("BI Dashboard: Route Insights")
+        st.write("Explore route-specific review patterns and satisfaction levels.")
+
+        st.markdown(
+            """
+            <iframe width="950" height="650" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
+                    frameborder="0" style="border:0" allowfullscreen 
+                    sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
+            </iframe>
+            """,
+            unsafe_allow_html=True
+        )
+
+        st.markdown(
+            "[Click here to view the Route Insights dashboard in a new tab.](https://lookerstudio.google.com/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF)"
+        )
