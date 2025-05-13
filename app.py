@@ -102,7 +102,7 @@ elif main_section == "BI Dashboards":
 
         st.markdown(
             """
-            <iframe width="950" height="650" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
+            <iframe width="1050" height="800" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
                     frameborder="0" style="border:0" allowfullscreen 
                     sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
             </iframe>
