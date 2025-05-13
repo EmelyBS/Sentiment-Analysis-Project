@@ -103,7 +103,7 @@ elif main_section == "BI Dashboards":
         st.markdown(
             """
             <div style="text-align: center;">
-                <iframe width="1100" height="800" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
+                <iframe width="1200" height="900" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
                         frameborder="0" style="border:0;" allowfullscreen 
                         sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
                 </iframe>
@@ -123,7 +123,7 @@ elif main_section == "BI Dashboards":
             """
             <div style="text-align: center;">
                 <iframe src="https://lookerstudio.google.com/embed/reporting/b5f009bf-6c85-41b0-b70e-af26d686eb68/page/G6bFF"
-                        width="1100" height="800" style="border:none;">
+                        width="1200" height="900" style="border:none;">
                 </iframe>
             </div>
             """,
