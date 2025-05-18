@@ -31,11 +31,15 @@ if main_section == "SA Interface":
         """,
         unsafe_allow_html=True
     )
-
-    st.image("Gemini_Generated_Image_Airplane_Sky.png", width=800)
-
     st.markdown(
         """
+        <style>
+            .full-width-img {
+                width: 100vw;  /* 100% of the viewport width */
+                margin-left: calc(-50vw + 50%);
+            }
+        </style>
+        <img src="SA_new.jpg" class="full-width-img" />
         <div style="display: flex; justify-content: center; align-items: center; width: 100%;">
             <p style="font-size: 12px; margin: 0;">
                 Image created by Yarin Horev using Ideogram (AI system by OpenAI), Date: March 3, 2025.
@@ -44,6 +48,7 @@ if main_section == "SA Interface":
         """,
         unsafe_allow_html=True
     )
+
     user_input = st.text_area("Enter your review here:")
 
     def sentiment_analyzer(text):
