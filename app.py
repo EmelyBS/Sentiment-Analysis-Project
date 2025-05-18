@@ -31,15 +31,24 @@ if main_section == "SA Interface":
         """,
         unsafe_allow_html=True
     )
+    import base64
+    
+    def get_base64_image(image_path):
+        with open(image_path, "rb") as f:
+            data = f.read()
+        return base64.b64encode(data).decode()
+    
+    encoded_image = get_base64_image("SA_new.jpg")
+    
     st.markdown(
-        """
+        f"""
         <style>
-            .full-width-img {
-                width: 100vw;  /* 100% of the viewport width */
+            .full-width-img {{
+                width: 100vw;
                 margin-left: calc(-50vw + 50%);
-            }
+            }}
         </style>
-        <img src="SA_new.jpg" class="full-width-img" />
+        <img src="data:image/jpg;base64,{encoded_image}" class="full-width-img" />
         <div style="display: flex; justify-content: center; align-items: center; width: 100%;">
             <p style="font-size: 12px; margin: 0;">
                 Image created by Yarin Horev using Ideogram (AI system by OpenAI), Date: March 3, 2025.
