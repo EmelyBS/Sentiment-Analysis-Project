@@ -42,15 +42,11 @@ if main_section == "SA Interface":
     
     st.markdown(
         f"""
-        <style>
-            .full-width-img {{
-                width: 100vw;
-                margin-left: calc(-50vw + 50%);
-            }}
-        </style>
-        <img src="data:image/jpg;base64,{encoded_image}" class="full-width-img" />
+        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
+            <img src="data:image/jpg;base64,{encoded_image}" style="width: 80%; max-width: 1000px; border-radius: 10px;" />
+        </div>
         <div style="display: flex; justify-content: center; align-items: center; width: 100%;">
-            <p style="font-size: 12px; margin: 0;">
+            <p style="font-size: 14px; margin: 0;">
                 Image created by Yarin Horev using Ideogram (AI system by OpenAI), Date: March 3, 2025.
             </p>
         </div>
