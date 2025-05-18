@@ -32,7 +32,7 @@ if main_section == "SA Interface":
         unsafe_allow_html=True
     )
 
-    st.image("Sentiment Analysis cover pic.jpg", width=400)
+    st.image("Gemini_Generated_Image_Airplane_Sky.png", width=800)
 
     st.markdown(
         """
