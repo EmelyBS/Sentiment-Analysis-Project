@@ -49,8 +49,10 @@ if main_section == "SA Interface":
     def sentiment_analyzer(text):
         inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True)
         outputs = model(**inputs)
-        predictions = torch.argmax(outputs.logits, dim=-1).item()
-        return predictions
+        probs = torch.nn.functional.softmax(outputs.logits, dim=-1)
+        positive_score = probs[0, 1].item()  # Probability of positive class
+        prediction = torch.argmax(outputs.logits, dim=-1).item()
+        return prediction, positive_score
 
     st.markdown("""
         <style>
@@ -71,19 +73,20 @@ if main_section == "SA Interface":
 
     if st.button("Analyze Sentiment"):
         if user_input:
-            sentiment = sentiment_analyzer(user_input)
+            sentiment, score = sentiment_analyzer(user_input)
             sentiment_label = "Positive 😊" if sentiment == 1 else "Negative 😞"
             prediction_color = "#66cc66" if sentiment == 1 else "#ff6666"
 
             st.markdown(f"""
                 <div style="background-color:{prediction_color}; padding: 10px; border-radius: 5px; color: white; text-align: center;">
-                    <h4>Prediction: {sentiment_label}</h4>
+                    <h4>Prediction: {sentiment_label} (Score: {score:.2f})</h4>
                 </div>
             """, unsafe_allow_html=True)
 
             st.session_state.history.append({
                 "Review": user_input,
-                "Sentiment": sentiment_label
+                "Sentiment": sentiment_label,
+                "Score": score
             })
         else:
             st.warning("Please enter a review to analyze.")
@@ -91,6 +94,8 @@ if main_section == "SA Interface":
     if st.session_state.history:
         st.subheader("History")
         history_df = pd.DataFrame(st.session_state.history)
+        if "Score" in history_df.columns:
+            history_df = history_df[["Review", "Sentiment", "Score"]]
         st.dataframe(history_df)
 
 # Page 2: BI Dashboards
