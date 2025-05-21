@@ -17,6 +17,27 @@ st.markdown(
             font-weight: 600;
             margin-bottom: 10px;
         }
+        .tabs-container {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-bottom: 10px;
+            margin-top: 40px;
+            border-bottom: 2px solid #1a73e8;
+            padding-bottom: 8px;
+        }
+        .tab {
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 18px;
+            padding-bottom: 6px;
+            border-bottom: 3px solid transparent;
+            color: #1a73e8;
+        }
+        .tab.selected {
+            border-bottom: 3px solid #0b47a1;
+            color: #0b47a1;
+        }
         .stButton>button {
             background-color: #003366;
             color: white;
@@ -45,17 +66,14 @@ def show_breadcrumbs(items):
     )
     st.markdown(f"<div style='position: relative;'>{breadcrumb_html}</div>", unsafe_allow_html=True)
 
-# Load image
-def get_base64_image(image_path):
-    with open(image_path, "rb") as f:
-        data = f.read()
-    return base64.b64encode(data).decode()
-
-# Load model and tokenizer
+# Load model and tokenizer from Hugging Face Hub
 model_repo = "emelybs/Sentiment_Analysis_Project_BA"
+
 try:
     tokenizer = AutoTokenizer.from_pretrained(model_repo)
-    model = AutoModelForSequenceClassification.from_pretrained(model_repo, revision="main", use_safetensors=True)
+    model = AutoModelForSequenceClassification.from_pretrained(
+        model_repo, revision="main", use_safetensors=True
+    )
 except Exception as e:
     st.error(f"Error loading model: {e}")
     st.stop()
@@ -63,6 +81,12 @@ except Exception as e:
 # Sidebar navigation
 st.sidebar.title("Navigation")
 main_section = st.sidebar.radio("Choose Section", ["Home", "SA Interface", "BI Dashboards"])
+
+# Helper function to get base64 image
+def get_base64_image(image_path):
+    with open(image_path, "rb") as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
 
 # Sentiment analyzer function
 def sentiment_analyzer(text):
@@ -73,10 +97,11 @@ def sentiment_analyzer(text):
     prediction = torch.argmax(outputs.logits, dim=-1).item()
     return prediction, positive_score
 
-# Home Page
+# Home page
 if main_section == "Home":
     show_breadcrumbs(["Home"])
-    st.markdown("<h2>Sentiment Analysis Web App</h2>", unsafe_allow_html=True)
+
+    st.markdown("<h2>Sentiment Analysis for Airline Reviews</h2>", unsafe_allow_html=True)
 
     encoded_image = get_base64_image("SA_new.jpg")
     st.markdown(
@@ -84,27 +109,40 @@ if main_section == "Home":
         <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
             <img src="data:image/jpg;base64,{encoded_image}" style="width: 80%; max-width: 1000px; border-radius: 10px;" />
         </div>
+        <div style="display: flex; justify-content: center; align-items: center; width: 100%; margin-bottom: 15px;">
+            <p style="font-size: 14px; margin: 0;">
+                Image created by Yarin Horev using Ideogram (AI system by OpenAI), Date: March 3, 2025.
+            </p>
+        </div>
+        <div style="text-align: center; font-size: 16px; max-width: 900px; margin: 0 auto;">
+            <p>
+                This project utilizes a fine-tuned BERT model to automatically analyze customer reviews from airline passengers.
+                The goal is to predict the sentiment (positive or negative) of each review and extract insights into customer satisfaction levels.
+                Through interactive dashboards and real-time sentiment analysis, users can explore feedback trends and gain a deeper understanding
+                of what drives positive and negative customer experiences in the airline industry.
+            </p>
+        </div>
         """,
         unsafe_allow_html=True
     )
 
-    st.markdown("""
-        <p style="text-align: center; font-size: 16px; padding: 0 10%;">
-        This project explores the application of sentiment analysis on verified airline reviews collected from Skytrax.
-        The aim is to uncover customer sentiment trends and determine key drivers of satisfaction or dissatisfaction,
-        using a range of machine learning and deep learning techniques.
-        We present a business intelligence system designed to provide insight into customer feedback, helping airlines make data-driven decisions.
-        </p>
-    """, unsafe_allow_html=True)
-
 # SA Interface
 elif main_section == "SA Interface":
-    st.sidebar.markdown("### Choose Task")
-    sub_section = st.sidebar.selectbox("SA Tasks", ["Sentiment Exploration", "Review History", "Review Analysis"])
+    tabs = ["Sentiment Exploration", "Review History", "Review Analysis"]
+    if "active_tab" not in st.session_state:
+        st.session_state.active_tab = "Sentiment Exploration"
 
-    show_breadcrumbs(["Home", "SA Interface", sub_section])
+    show_breadcrumbs(["Home", "SA Interface", st.session_state.active_tab])
 
-    if sub_section == "Sentiment Exploration":
+    cols = st.columns(len(tabs))
+    for idx, tab in enumerate(tabs):
+        is_selected = (tab == st.session_state.active_tab)
+        tab_class = "tab selected" if is_selected else "tab"
+        with cols[idx]:
+            if st.button(tab, key=f"tab_{tab}"):
+                st.session_state.active_tab = tab
+
+    if st.session_state.active_tab == "Sentiment Exploration":
         st.markdown("<h2>Sentiment Analysis of Airline Reviews</h2>", unsafe_allow_html=True)
 
         encoded_image = get_base64_image("SA_new.jpg")
@@ -147,7 +185,7 @@ elif main_section == "SA Interface":
             else:
                 st.warning("Please enter a review to analyze.")
 
-    elif sub_section == "Review History":
+    elif st.session_state.active_tab == "Review History":
         st.markdown("<h2>Review History</h2>", unsafe_allow_html=True)
 
         if 'history' not in st.session_state or not st.session_state.history:
@@ -158,7 +196,7 @@ elif main_section == "SA Interface":
                 history_df = history_df[["Review", "Sentiment", "Score"]]
             st.dataframe(history_df)
 
-    elif sub_section == "Review Analysis":
+    elif st.session_state.active_tab == "Review Analysis":
         st.markdown("<h2>Review Analysis</h2>", unsafe_allow_html=True)
         st.markdown("<p style='text-align:center;'>Here you can see the different opinions and their sentiment.</p>", unsafe_allow_html=True)
 
