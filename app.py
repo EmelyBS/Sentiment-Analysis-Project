@@ -2,262 +2,128 @@ import streamlit as st
 import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import pandas as pd
+import base64
 
-# Hide Streamlit default sidebar and fix margins + add hamburger menu styling
+# Set wide layout and force sidebar to be expanded
+st.set_page_config(layout="wide", initial_sidebar_state="expanded")
+
+# CSS styles for breadcrumb and tabs
 st.markdown(
     """
     <style>
-        /* Hide Streamlit sidebar */
-        .css-1d391kg { display: none; }
-        /* Fix main content margin */
-        .css-18e3th9 { margin-left: 0px; }
-
-        /* Hamburger menu styling */
-        .hamburger {
-            font-size: 28px;
-            cursor: pointer;
-            user-select: none;
-            padding: 10px 15px;
+        /* Breadcrumb at top-left corner */
+        .breadcrumb {
+            font-size: 14px;
             color: #1a73e8;
-            font-weight: 700;
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            z-index: 100;
-            background: white;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgb(0 0 0 / 0.1);
-        }
-
-        /* Navigation panel */
-        .nav-panel {
-            background: #e8f0fe;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 50px;
-            width: 220px;
-            height: 90vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            overflow-y: auto;
-            box-shadow: 2px 0 6px rgb(0 0 0 / 0.1);
-            z-index: 90;
-        }
-
-        /* Navigation items */
-        .nav-item {
-            padding: 8px 6px;
-            cursor: pointer;
             font-weight: 600;
-            color: #0b47a1;
-            margin-bottom: 6px;
-            border-radius: 4px;
-            user-select: none;
-        }
-        .nav-item:hover {
-            background-color: #c6dafc;
-        }
-        .nav-item.selected {
-            background-color: #0b47a1;
-            color: white;
+            margin-bottom: 10px;
         }
 
-        /* Sub-menu (dashboards) indented */
-        .sub-menu {
-            margin-left: 20px;
-            margin-top: 5px;
-        }
-        .sub-menu-item {
-            padding: 6px 8px;
-            cursor: pointer;
-            font-weight: 500;
-            color: #1558d6;
-            margin-bottom: 5px;
-            border-radius: 4px;
-            user-select: none;
-        }
-        .sub-menu-item:hover {
-            background-color: #a9c7ff;
-        }
-        .sub-menu-item.selected {
-            background-color: #1558d6;
-            color: white;
-        }
-
-        /* Center container for SA tabs */
+        /* Tabs container with underline */
         .tabs-container {
             display: flex;
             justify-content: center;
-            gap: 40px;
-            margin-top: 20px;
+            gap: 50px;
             margin-bottom: 10px;
-            border-bottom: 2px solid #0b47a1;
-        }
-        .tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            font-weight: 700;
-            border-radius: 8px 8px 0 0;
-            user-select: none;
-            color: #0b47a1;
-        }
-        .tab.selected {
-            background-color: #0b47a1;
-            color: white;
-            border-bottom: 3px solid white;
+            margin-top: 40px;
+            border-bottom: 2px solid #1a73e8;
+            padding-bottom: 8px;
         }
 
-        /* Breadcrumbs styling */
-        .breadcrumbs {
-            font-size: 14px;
-            margin: 10px 0 20px 10px;
-            color: #1558d6;
-            user-select: none;
-        }
-        .breadcrumbs span {
+        /* Tabs styling */
+        .tab {
             cursor: pointer;
-            text-decoration: underline;
+            font-weight: 600;
+            font-size: 18px;
+            padding-bottom: 6px;
+            border-bottom: 3px solid transparent;
+            color: #1a73e8;
         }
-        .breadcrumbs span:hover {
+        .tab.selected {
+            border-bottom: 3px solid #0b47a1;
             color: #0b47a1;
+        }
+
+        /* Button style for Analyze Sentiment */
+        .stButton>button {
+            background-color: #003366;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            width: 100%;
+            display: block;
+            margin: 0 auto;
         }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
-# Hamburger toggle state
-if "menu_open" not in st.session_state:
-    st.session_state.menu_open = False
+def show_breadcrumbs(items):
+    # Show breadcrumb as clickable items separated by >
+    breadcrumb_html = " &gt; ".join(
+        [f"<span class='breadcrumb'>{item}</span>" for item in items]
+    )
+    st.markdown(f"<div style='position: relative;'>{breadcrumb_html}</div>", unsafe_allow_html=True)
 
-def toggle_menu():
-    st.session_state.menu_open = not st.session_state.menu_open
+# Load model and tokenizer from Hugging Face Hub
+model_repo = "emelybs/Sentiment_Analysis_Project_BA"
 
-# Hamburger icon fixed top-left
-st.markdown(
-    f"<div class='hamburger' onclick='window.dispatchEvent(new Event(\"toggle_menu\"))'>☰</div>",
-    unsafe_allow_html=True,
-)
-if st.button("☰", key="hamburger_btn_hidden", help="Toggle menu", on_click=toggle_menu):
-    pass
+try:
+    tokenizer = AutoTokenizer.from_pretrained(model_repo)
+    model = AutoModelForSequenceClassification.from_pretrained(
+        model_repo, revision="main", use_safetensors=True
+    )
+except Exception as e:
+    st.error(f"Error loading model: {e}")
+    st.stop()
 
-# Sync JS event for hamburger menu toggle (hacky but works in Streamlit)
-st.experimental_set_query_params()  # Dummy to refresh on click
+# Sidebar navigation
+st.sidebar.title("Navigation")
+main_section = st.sidebar.radio("Choose Section", ["SA Interface", "BI Dashboards"])
 
-# Show nav menu if open
-if st.session_state.menu_open:
-    st.markdown("<div class='nav-panel'>", unsafe_allow_html=True)
+# Helper function to get base64 image
+def get_base64_image(image_path):
+    with open(image_path, "rb") as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
 
-    main_sections = ["SA Interface", "BI Dashboards"]
-    current_section = st.session_state.get("main_section", "SA Interface")
-    current_dashboard = st.session_state.get("dashboard_page", "Sentiment Trends")
+# Sentiment analyzer function
+def sentiment_analyzer(text):
+    inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True)
+    outputs = model(**inputs)
+    probs = torch.nn.functional.softmax(outputs.logits, dim=-1)
+    positive_score = probs[0, 1].item()  # Probability of positive class
+    prediction = torch.argmax(outputs.logits, dim=-1).item()
+    return prediction, positive_score
 
-    # Main navigation items
-    for sec in main_sections:
-        selected = sec == current_section
-        style = "selected" if selected else ""
-        if st.button(sec, key=f"nav_{sec}", help=f"Go to {sec}"):
-            st.session_state.main_section = sec
-            # Reset dashboard page on switching away
-            if sec != "BI Dashboards":
-                st.session_state.dashboard_page = None
-            else:
-                if st.session_state.get("dashboard_page") is None:
-                    st.session_state.dashboard_page = "Sentiment Trends"
-        st.markdown(
-            f"<div class='nav-item {style}'>{sec}</div>",
-            unsafe_allow_html=True,
-        )
-
-        # Show dashboards submenu if BI Dashboards selected
-        if sec == "BI Dashboards" and selected:
-            dashboards = ["Sentiment Trends", "Route Insights"]
-            st.markdown("<div class='sub-menu'>", unsafe_allow_html=True)
-            for dash in dashboards:
-                dash_selected = dash == current_dashboard
-                dash_style = "sub-menu-item selected" if dash_selected else "sub-menu-item"
-                if st.button(dash, key=f"dash_{dash}", help=f"Go to {dash} dashboard"):
-                    st.session_state.dashboard_page = dash
-                st.markdown(
-                    f"<div class='{dash_style}'>{dash}</div>",
-                    unsafe_allow_html=True,
-                )
-            st.markdown("</div>", unsafe_allow_html=True)
-
-    st.markdown("</div>", unsafe_allow_html=True)
-else:
-    # Add left padding so content doesn't hide under hamburger icon
-    st.markdown("<div style='height: 50px;'></div>", unsafe_allow_html=True)
-
-# Get selected sections for rendering main content
-main_section = st.session_state.get("main_section", "SA Interface")
-dashboard_page = st.session_state.get("dashboard_page", "Sentiment Trends")
-sa_tab = st.session_state.get("sa_tab", "Sentiment Exploration")
-
-# Function for breadcrumbs with clickable steps
-def breadcrumbs(path_list, level_key_prefix):
-    parts = []
-    for i, part in enumerate(path_list):
-        key = f"{level_key_prefix}_{i}"
-        if i == len(path_list) - 1:
-            parts.append(f"<span><b>{part}</b></span>")
-        else:
-            if st.button(part, key=key):
-                # Clicking breadcrumb resets tab or page accordingly
-                if level_key_prefix == "main":
-                    st.session_state.main_section = part
-                elif level_key_prefix == "sa":
-                    st.session_state.sa_tab = part
-            parts.append(f"<span style='margin-right: 8px;'>{parts and '›' or ''} {part}</span>")
-    crumb_html = " › ".join(path_list)
-    crumb_html_clickable = ""
-    for i, part in enumerate(path_list):
-        key = f"{level_key_prefix}_bc_{i}"
-        if i != len(path_list) - 1:
-            crumb_html_clickable += f"<span style='cursor:pointer; text-decoration:underline; margin-right:5px;' onclick='window.dispatchEvent(new CustomEvent(\"crumb_click\", {{detail: \"{part}\"}}))'>{part}</span> › "
-        else:
-            crumb_html_clickable += f"<span><b>{part}</b></span>"
-    return crumb_html_clickable
-
-# Show main content
 if main_section == "SA Interface":
-
-    # Breadcrumbs
-    bc_html = breadcrumbs(["SA Interface", sa_tab], "sa")
-    st.markdown(f"<div class='breadcrumbs'>{bc_html}</div>", unsafe_allow_html=True)
-
-    # Title for picture tab only
-    if sa_tab == "Sentiment Exploration":
-        st.markdown("<h2 style='margin-left: 10px;'>Sentiment Analysis of Airline Reviews</h2>")
-    elif sa_tab == "Review History":
-        st.markdown("<h2 style='margin-left: 10px;'>Review History</h2>")
-    elif sa_tab == "Review Analysis":
-        st.markdown("<h2 style='margin-left: 10px;'>Review Analysis</h2>")
-
-    # Tabs in center
+    # Tabs for SA Interface
     tabs = ["Sentiment Exploration", "Review History", "Review Analysis"]
+    if "active_tab" not in st.session_state:
+        st.session_state.active_tab = "Sentiment Exploration"
 
+    # Show breadcrumbs at top left
+    show_breadcrumbs(["Home", "SA Interface", st.session_state.active_tab])
+
+    # Tabs UI
     cols = st.columns(len(tabs))
-    for i, tab in enumerate(tabs):
-        selected = (tab == sa_tab)
-        tab_style = "tab selected" if selected else "tab"
-        with cols[i]:
-            if st.button(tab, key=f"sa_tab_{tab}"):
-                st.session_state.sa_tab = tab
-            st.markdown(f"<div class='{tab_style}'>{tab}</div>", unsafe_allow_html=True)
+    for idx, tab in enumerate(tabs):
+        is_selected = (tab == st.session_state.active_tab)
+        tab_class = "tab selected" if is_selected else "tab"
+        # Use markdown with clickable span (hacky workaround to keep tabs as text)
+        # But since Streamlit markdown is static, we use buttons instead with style removed
+        # So here, we use st.button but with style to look like text (better than markdown clicks)
+        with cols[idx]:
+            if st.button(tab, key=f"tab_{tab}"):
+                st.session_state.active_tab = tab
+            # Re-render with color after click (button disables immediate UI change, so no problem)
 
-    # Line under tabs
-    st.markdown("<hr style='border: 2px solid #0b47a1; margin-top: -10px; margin-bottom: 20px;'>", unsafe_allow_html=True)
+    # Add underline below tabs container (done by CSS border)
 
     # Content for each tab
-    if sa_tab == "Sentiment Exploration":
-        import base64
-
-        def get_base64_image(image_path):
-            with open(image_path, "rb") as f:
-                data = f.read()
-            return base64.b64encode(data).decode()
+    if st.session_state.active_tab == "Sentiment Exploration":
+        st.markdown("<h2 style='text-align:center;'>Sentiment Analysis of Airline Reviews</h2>", unsafe_allow_html=True)
 
         encoded_image = get_base64_image("SA_new.jpg")
         st.markdown(
@@ -265,11 +131,107 @@ if main_section == "SA Interface":
             <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
                 <img src="data:image/jpg;base64,{encoded_image}" style="width: 80%; max-width: 1000px; border-radius: 10px;" />
             </div>
-            <div style="display: flex; justify-content: center; align-items: center; width: 100%; margin-bottom: 30px;">
-                <p style="font-size: 16px; max-width: 900px; text-align: center; color: #0b47a1;">
-                    Here you can see the different opinions and their sentiment.
+            <div style="display: flex; justify-content: center; align-items: center; width: 100%; margin-bottom: 15px;">
+                <p style="font-size: 14px; margin: 0;">
+                    Image created by Yarin Horev using Ideogram (AI system by OpenAI), Date: March 3, 2025.
                 </p>
             </div>
             """,
-            unsafe_allow_html=True,
+            unsafe_allow_html=True
+        )
+
+        user_input = st.text_area("Enter your review here:")
+
+        if 'history' not in st.session_state:
+            st.session_state.history = []
+
+        if st.button("Analyze Sentiment"):
+            if user_input:
+                sentiment, score = sentiment_analyzer(user_input)
+                sentiment_label = "Positive 😊" if sentiment == 1 else "Negative 😞"
+                prediction_color = "#66cc66" if sentiment == 1 else "#ff6666"
+
+                st.markdown(f"""
+                    <div style="background-color:{prediction_color}; padding: 10px; border-radius: 5px; color: white; text-align: center;">
+                        <h4>Prediction: {sentiment_label} (Score: {score:.2f})</h4>
+                    </div>
+                """, unsafe_allow_html=True)
+
+                st.session_state.history.append({
+                    "Review": user_input,
+                    "Sentiment": sentiment_label,
+                    "Score": score
+                })
+            else:
+                st.warning("Please enter a review to analyze.")
+
+    elif st.session_state.active_tab == "Review History":
+        st.markdown("<h2 style='text-align:center;'>Review History</h2>", unsafe_allow_html=True)
+
+        if 'history' not in st.session_state or not st.session_state.history:
+            st.info("No history available. Analyze some reviews first.")
+        else:
+            history_df = pd.DataFrame(st.session_state.history)
+            if "Score" in history_df.columns:
+                history_df = history_df[["Review", "Sentiment", "Score"]]
+            st.dataframe(history_df)
+
+    elif st.session_state.active_tab == "Review Analysis":
+        st.markdown("<h2 style='text-align:center;'>Review Analysis</h2>", unsafe_allow_html=True)
+        st.markdown(
+            "<p style='text-align:center;'>Here you can see the different opinions and their sentiment.</p>",
+            unsafe_allow_html=True
+        )
+        # Embed Looker Studio Dashboard (adjust width and height so no scrolling)
+        st.markdown(
+            """
+            <div style="text-align: center;">
+                <iframe width="900" height="600" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
+                        frameborder="0" style="border:0;" allowfullscreen 
+                        sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
+                </iframe>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+elif main_section == "BI Dashboards":
+    dashboard_page = st.sidebar.radio("Select a BI Dashboard", ["Sentiment Trends", "Route Insights"])
+
+    if dashboard_page == "Sentiment Trends":
+        st.title("BI Dashboard: Sentiment Trends")
+        st.write("Insights on sentiment and customer experience metrics. An Overview on sentiment trends over time.")
+
+        st.markdown(
+            """
+            <div style="text-align: center;">
+                <iframe width="900" height="600" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
+                        frameborder="0" style="border:0;" allowfullscreen 
+                        sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
+                </iframe>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+        st.markdown(
+            "[Click here to view the Sentiment Trends dashboard in a new tab.](https://lookerstudio.google.com/reporting/b5f009bf-6c85-41b0-b70e-af26d686eb68/page/G6bFF)"
+        )
+
+    elif dashboard_page == "Route Insights":
+        st.title("BI Dashboard: Route Insights")
+        st.write("Insights to route-specific review patterns and satisfaction levels of airline customers.")
+        st.markdown(
+            """
+            <div style="text-align: center;">
+                <iframe src="https://lookerstudio.google.com/embed/reporting/b5f009bf-6c85-41b0-b70e-af26d686eb68/page/G6bFF"
+                        width="900" height="600" style="border:none;">
+                </iframe>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+        st.markdown(
+            "[Click here to view the Route Insights dashboard in a new tab.](https://lookerstudio.google.com/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF)"
         )
