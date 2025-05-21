@@ -2,183 +2,165 @@ import streamlit as st
 import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import pandas as pd
-import base64
 
-# Page config
-st.set_page_config(layout="wide", page_title="Sentiment Analysis App")
+# Set wide layout and force sidebar to be expanded
+st.set_page_config(layout="wide", initial_sidebar_state="expanded")
 
 # Load model and tokenizer
 model_repo = "emelybs/Sentiment_Analysis_Project_BA"
 tokenizer = AutoTokenizer.from_pretrained(model_repo)
-model = AutoModelForSequenceClassification.from_pretrained(model_repo, revision="main", use_safetensors=True)
+model = AutoModelForSequenceClassification.from_pretrained(
+    model_repo, revision="main", use_safetensors=True
+)
 
-# Session state
-if "section" not in st.session_state:
-    st.session_state.section = "SA Interface"
-if "sub_section" not in st.session_state:
-    st.session_state.sub_section = "Exploration"
-if "history" not in st.session_state:
-    st.session_state.history = []
+# Sidebar navigation
+st.sidebar.title("Navigation")
+main_section = st.sidebar.radio("Go to", ["SA Interface", "BI Dashboards"])
 
-# --- Style ---
-st.markdown("""
-    <style>
-        body {
-            background-color: #eef3fa;
-        }
-        .nav-link, .sub-link {
-            cursor: pointer;
-            padding: 6px 10px;
-            margin: 4px 0;
-            border-radius: 5px;
-        }
-        .nav-link:hover, .sub-link:hover {
-            background-color: #dce6f7;
-        }
-        .nav-active {
-            background-color: #1f3b73;
-            color: white !important;
-            font-weight: bold;
-        }
-        .sub-link {
-            margin-left: 15px;
-            font-size: 15px;
-            color: #1f3b73;
-        }
-        .sub-active {
-            background-color: #4da8da;
-            color: white !important;
-        }
-        .center-button > div {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .stButton>button {
-            background-color: #003366;
-            color: white;
-            font-size: 16px;
-            padding: 8px 20px;
-            border-radius: 5px;
-        }
-        .main-title {
-            margin-top: -30px;
-            padding-top: 10px;
-        }
-    </style>
-""", unsafe_allow_html=True)
-
-# Sidebar Navigation
-st.sidebar.markdown("## Navigation")
-
-def nav_click(label, section=None, sub_section=None, is_sub=False):
-    clicked = False
-    if st.sidebar.button(label, key=label):
-        if section:
-            st.session_state.section = section
-        if sub_section:
-            st.session_state.sub_section = sub_section
-        clicked = True
-    return clicked
-
-# Navigation UI logic
-if nav_click("SA Interface", section="SA Interface"):
-    st.session_state.sub_section = "Exploration"
-if st.session_state.section == "SA Interface":
-    nav_click("• Exploration", section="SA Interface", sub_section="Exploration", is_sub=True)
-    nav_click("• History", section="SA Interface", sub_section="History", is_sub=True)
-    nav_click("• Review Analysis", section="SA Interface", sub_section="Review Analysis", is_sub=True)
-
-if nav_click("BI Dashboards", section="BI Dashboards"):
-    st.session_state.sub_section = "Sentiment Trends"
-if st.session_state.section == "BI Dashboards":
-    nav_click("• Sentiment Trends", section="BI Dashboards", sub_section="Sentiment Trends", is_sub=True)
-    nav_click("• Route Insights", section="BI Dashboards", sub_section="Route Insights", is_sub=True)
-
-# Main content area
-st.markdown(f"<h2 class='main-title'>{st.session_state.sub_section}</h2>", unsafe_allow_html=True)
-
-# --- Pages ---
-
-if st.session_state.sub_section == "Exploration":
-    st.markdown("<h4 style='color:#1f3b73;'>Sentiment Analysis on Airline Reviews</h4>", unsafe_allow_html=True)
-    encoded_image = base64.b64encode(open("SA_new.jpg", "rb").read()).decode()
+# Function to render breadcrumbs
+def render_breadcrumbs(crumbs):
+    crumb_html = " / ".join(
+        f'<a href="#">{crumb}</a>' if i < len(crumbs) - 1 else f"<strong>{crumb}</strong>"
+        for i, crumb in enumerate(crumbs)
+    )
     st.markdown(
-        f"""
-        <div style="display: flex; justify-content: center;">
-            <img src="data:image/jpg;base64,{encoded_image}" style="width: 80%; max-width: 800px; border-radius: 10px;" />
-        </div>
-        <p style="text-align:center; font-size:14px;">Image created by Yarin Horev using Ideogram, March 3, 2025.</p>
+        f'<div style="font-size:14px; color: #004080; margin-bottom: 10px;">📍 {crumb_html}</div>',
+        unsafe_allow_html=True,
+    )
+
+# Sentiment prediction
+def sentiment_analyzer(text):
+    inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True)
+    outputs = model(**inputs)
+    probs = torch.nn.functional.softmax(outputs.logits, dim=-1)
+    prediction = torch.argmax(outputs.logits, dim=-1).item()
+    score = probs[0, 1].item()
+    return prediction, score
+
+# SA Interface with tabs
+if main_section == "SA Interface":
+    render_breadcrumbs(["Home", "SA Interface"])
+    tab1, tab2, tab3 = st.tabs(["Sentiment Exploration", "Review History", "Review Analysis"])
+
+    with tab1:
+        render_breadcrumbs(["Home", "SA Interface", "Sentiment Exploration"])
+        st.markdown("<h3 style='margin-top: 0;'>Sentiment Analysis on Airline Reviews</h3>", unsafe_allow_html=True)
+
+        def get_base64_image(image_path):
+            import base64
+            with open(image_path, "rb") as f:
+                data = f.read()
+            return base64.b64encode(data).decode()
+
+        encoded_image = get_base64_image("SA_new.jpg")
+
+        st.markdown(
+            f"""
+            <div style="text-align: center;">
+                <img src="data:image/jpg;base64,{encoded_image}" style="width: 80%; max-width: 1000px; border-radius: 10px;" />
+                <p style="font-size: 14px;">Image created by Yarin Horev using Ideogram, March 3, 2025.</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        user_input = st.text_area("Enter your review here:")
+
+        st.markdown("""
+            <style>
+                div.stButton > button {
+                    background-color: #003366;
+                    color: white;
+                    font-size: 16px;
+                    border-radius: 5px;
+                    display: block;
+                    margin: auto;
+                }
+            </style>
         """, unsafe_allow_html=True)
 
-    user_input = st.text_area("Enter your review here:")
+        if 'history' not in st.session_state:
+            st.session_state.history = []
 
-    with st.container():
-        col1, col2, col3 = st.columns([1, 2, 1])
-        with col2:
-            if st.button("Analyze Sentiment"):
-                if user_input:
-                    inputs = tokenizer(user_input, return_tensors="pt", truncation=True, padding=True)
-                    outputs = model(**inputs)
-                    probs = torch.nn.functional.softmax(outputs.logits, dim=-1)
-                    sentiment = torch.argmax(outputs.logits, dim=-1).item()
-                    score = probs[0, 1].item()
-                    label = "Positive 😊" if sentiment == 1 else "Negative 😞"
-                    color = "#66cc66" if sentiment == 1 else "#ff6666"
-                    st.markdown(f"""
-                        <div style="background-color:{color}; padding: 10px; border-radius: 5px; color: white; text-align: center;">
-                            <h4>{label} (Score: {score:.2f})</h4>
-                        </div>
-                    """, unsafe_allow_html=True)
+        if st.button("Analyze Sentiment"):
+            if user_input:
+                sentiment, score = sentiment_analyzer(user_input)
+                sentiment_label = "Positive 😊" if sentiment == 1 else "Negative 😞"
+                prediction_color = "#66cc66" if sentiment == 1 else "#ff6666"
 
-                    st.session_state.history.append({
-                        "Review": user_input,
-                        "Sentiment": label,
-                        "Score": score
-                    })
-                else:
-                    st.warning("Please enter a review.")
+                st.markdown(f"""
+                    <div style="background-color:{prediction_color}; padding: 10px; border-radius: 5px; color: white; text-align: center;">
+                        <h4>Prediction: {sentiment_label} (Score: {score:.2f})</h4>
+                    </div>
+                """, unsafe_allow_html=True)
 
-elif st.session_state.sub_section == "History":
-    st.subheader("Review History")
-    if st.session_state.history:
-        df = pd.DataFrame(st.session_state.history)
-        st.dataframe(df)
-    else:
-        st.info("No reviews analyzed yet.")
+                st.session_state.history.append({
+                    "Review": user_input,
+                    "Sentiment": sentiment_label,
+                    "Score": score
+                })
+            else:
+                st.warning("Please enter a review to analyze.")
 
-elif st.session_state.sub_section == "Review Analysis":
-    st.subheader("Review Analysis")
-    st.write("Here you can see the different opinions and their sentiment.")
-    st.markdown(
-        """
-        <div style="text-align:center;">
-            <iframe width="1100" height="600" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
-                frameborder="0" style="border:0;" allowfullscreen></iframe>
-        </div>
-        """, unsafe_allow_html=True
-    )
+    with tab2:
+        render_breadcrumbs(["Home", "SA Interface", "Review History"])
+        if st.session_state.history:
+            st.subheader("History")
+            history_df = pd.DataFrame(st.session_state.history)
+            if "Score" in history_df.columns:
+                history_df = history_df[["Review", "Sentiment", "Score"]]
+            st.dataframe(history_df)
+        else:
+            st.info("No reviews have been analyzed yet.")
 
-elif st.session_state.sub_section == "Sentiment Trends":
-    st.subheader("BI Dashboard: Sentiment Trends")
-    st.write("Insights on sentiment and customer experience metrics over time.")
-    st.markdown(
-        """
-        <div style="text-align:center;">
-            <iframe width="1100" height="600" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
-                frameborder="0" style="border:0;" allowfullscreen></iframe>
-        </div>
-        """, unsafe_allow_html=True
-    )
+    with tab3:
+        render_breadcrumbs(["Home", "SA Interface", "Review Analysis"])
+        st.subheader("Here you can see the different opinions and their sentiment.")
+        st.markdown(
+            """
+            <div style="text-align: center;">
+                <iframe width="1200" height="650" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
+                        frameborder="0" style="border:0;" allowfullscreen
+                        sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
+                </iframe>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
-elif st.session_state.sub_section == "Route Insights":
-    st.subheader("BI Dashboard: Route Insights")
-    st.write("Review patterns and satisfaction levels per route.")
-    st.markdown(
-        """
-        <div style="text-align:center;">
-            <iframe width="1100" height="600" src="https://lookerstudio.google.com/embed/reporting/b5f009bf-6c85-41b0-b70e-af26d686eb68/page/G6bFF"
-                frameborder="0" style="border:0;" allowfullscreen></iframe>
-        </div>
-        """, unsafe_allow_html=True
-    )
+# BI Dashboards
+elif main_section == "BI Dashboards":
+    render_breadcrumbs(["Home", "BI Dashboards"])
+    dashboard_option = st.sidebar.radio("Subtopics", ["Sentiment Trends", "Route Insights"], label_visibility="collapsed")
+
+    if dashboard_option == "Sentiment Trends":
+        render_breadcrumbs(["Home", "BI Dashboards", "Sentiment Trends"])
+        st.title("BI Dashboard: Sentiment Trends")
+        st.write("Insights on sentiment and customer experience metrics.")
+
+        st.markdown(
+            """
+            <div style="text-align: center;">
+                <iframe width="1200" height="650" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
+                        frameborder="0" style="border:0;" allowfullscreen>
+                </iframe>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+    elif dashboard_option == "Route Insights":
+        render_breadcrumbs(["Home", "BI Dashboards", "Route Insights"])
+        st.title("BI Dashboard: Route Insights")
+        st.write("Insights into route-specific review patterns and satisfaction levels.")
+
+        st.markdown(
+            """
+            <div style="text-align: center;">
+                <iframe width="1200" height="650" src="https://lookerstudio.google.com/embed/reporting/b5f009bf-6c85-41b0-b70e-af26d686eb68/page/G6bFF"
+                        frameborder="0" style="border:0;" allowfullscreen>
+                </iframe>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
