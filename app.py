@@ -7,6 +7,65 @@ import base64
 # Set wide layout and force sidebar to be expanded
 st.set_page_config(layout="wide", initial_sidebar_state="expanded")
 
+# CSS styles for breadcrumb and tabs
+st.markdown(
+    """
+    <style>
+        /* Breadcrumb at top-left corner */
+        .breadcrumb {
+            font-size: 14px;
+            color: #1a73e8;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        /* Tabs container with underline */
+        .tabs-container {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-bottom: 10px;
+            margin-top: 40px;
+            border-bottom: 2px solid #1a73e8;
+            padding-bottom: 8px;
+        }
+
+        /* Tabs styling */
+        .tab {
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 18px;
+            padding-bottom: 6px;
+            border-bottom: 3px solid transparent;
+            color: #1a73e8;
+        }
+        .tab.selected {
+            border-bottom: 3px solid #0b47a1;
+            color: #0b47a1;
+        }
+
+        /* Button style for Analyze Sentiment */
+        .stButton>button {
+            background-color: #003366;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            width: 100%;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+def show_breadcrumbs(items):
+    # Show breadcrumb as clickable items separated by >
+    breadcrumb_html = " &gt; ".join(
+        [f"<span class='breadcrumb'>{item}</span>" for item in items]
+    )
+    st.markdown(f"<div style='position: relative;'>{breadcrumb_html}</div>", unsafe_allow_html=True)
+
 # Load model and tokenizer from Hugging Face Hub
 model_repo = "emelybs/Sentiment_Analysis_Project_BA"
 
@@ -19,136 +78,69 @@ except Exception as e:
     st.error(f"Error loading model: {e}")
     st.stop()
 
-# --- CSS for bright background and styling ---
-st.markdown(
-    """
-    <style>
-        /* Bright background */
-        .main {
-            background-color: #f5f8fa;
-            color: #000000;
-        }
-        /* Breadcrumb styling */
-        .breadcrumb {
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-        .breadcrumb a {
-            color: #1a73e8;
-            text-decoration: none;
-            margin-right: 5px;
-        }
-        .breadcrumb a:hover {
-            text-decoration: underline;
-        }
-        /* Tabs container */
-        .tabs-container {
-            display: flex;
-            justify-content: center;
-            gap: 50px;
-            margin-bottom: 20px;
-            margin-top: 10px;
-        }
-        /* Tabs styling */
-        .tab {
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 18px;
-            padding-bottom: 6px;
-            border-bottom: 3px solid transparent;
-            color: #1a73e8;
-        }
-        .tab.selected {
-            border-bottom: 3px solid #1a73e8;
-            color: #0b47a1;
-        }
-        /* Center main content start at top */
-        .main > div:first-child {
-            padding-top: 1rem !important;
-        }
-        /* Button styling */
-        .stButton>button {
-            background-color: #003366;
-            color: white;
-            font-size: 16px;
-            border-radius: 5px;
-            width: 200px;
-            display: block;
-            margin: 0 auto 15px auto;
-        }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-
 # Sidebar navigation
 st.sidebar.title("Navigation")
 main_section = st.sidebar.radio("Choose Section", ["SA Interface", "BI Dashboards"])
 
-def show_breadcrumbs(path_list):
-    breadcrumb_html = '<div class="breadcrumb">'
-    for i, p in enumerate(path_list):
-        if i < len(path_list) - 1:
-            breadcrumb_html += f'<a href="#">{p} ></a>'
-        else:
-            breadcrumb_html += f'<span>{p}</span>'
-    breadcrumb_html += '</div>'
-    st.markdown(breadcrumb_html, unsafe_allow_html=True)
+# Helper function to get base64 image
+def get_base64_image(image_path):
+    with open(image_path, "rb") as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+# Sentiment analyzer function
+def sentiment_analyzer(text):
+    inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True)
+    outputs = model(**inputs)
+    probs = torch.nn.functional.softmax(outputs.logits, dim=-1)
+    positive_score = probs[0, 1].item()  # Probability of positive class
+    prediction = torch.argmax(outputs.logits, dim=-1).item()
+    return prediction, positive_score
 
 if main_section == "SA Interface":
-    # Show breadcrumbs once above the title
-    show_breadcrumbs(["SA Interface"])
-
-    # Tabs logic for SA Interface
+    # Tabs for SA Interface
     tabs = ["Sentiment Exploration", "Review History", "Review Analysis"]
-    if "selected_tab" not in st.session_state:
-        st.session_state.selected_tab = "Sentiment Exploration"
+    if "active_tab" not in st.session_state:
+        st.session_state.active_tab = "Sentiment Exploration"
 
+    # Show breadcrumbs at top left
+    show_breadcrumbs(["Home", "SA Interface", st.session_state.active_tab])
+
+    # Tabs UI
     cols = st.columns(len(tabs))
-    for i, tab in enumerate(tabs):
-        is_selected = (tab == st.session_state.selected_tab)
+    for idx, tab in enumerate(tabs):
+        is_selected = (tab == st.session_state.active_tab)
         tab_class = "tab selected" if is_selected else "tab"
-        with cols[i]:
+        # Use markdown with clickable span (hacky workaround to keep tabs as text)
+        # But since Streamlit markdown is static, we use buttons instead with style removed
+        # So here, we use st.button but with style to look like text (better than markdown clicks)
+        with cols[idx]:
             if st.button(tab, key=f"tab_{tab}"):
-                st.session_state.selected_tab = tab
+                st.session_state.active_tab = tab
+            # Re-render with color after click (button disables immediate UI change, so no problem)
+
+    # Add underline below tabs container (done by CSS border)
+
+    # Content for each tab
+    if st.session_state.active_tab == "Sentiment Exploration":
+        st.markdown("<h2 style='text-align:center;'>Sentiment Analysis of Airline Reviews</h2>", unsafe_allow_html=True)
+
+        encoded_image = get_base64_image("SA_new.jpg")
         st.markdown(
-            f'<style>div[aria-label="tab_{tab}"] > button {{color: {"#0b47a1" if is_selected else "#1a73e8"}; font-weight: {"bold" if is_selected else "normal"}; border-bottom: {"3px solid #1a73e8" if is_selected else "none"};}}</style>',
-            unsafe_allow_html=True,
+            f"""
+            <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
+                <img src="data:image/jpg;base64,{encoded_image}" style="width: 80%; max-width: 1000px; border-radius: 10px;" />
+            </div>
+            <div style="display: flex; justify-content: center; align-items: center; width: 100%; margin-bottom: 15px;">
+                <p style="font-size: 14px; margin: 0;">
+                    Image created by Yarin Horev using Ideogram (AI system by OpenAI), Date: March 3, 2025.
+                </p>
+            </div>
+            """,
+            unsafe_allow_html=True
         )
 
-    st.markdown(f"<h3 style='text-align:left; margin-top:0;'>{st.session_state.selected_tab}</h3>", unsafe_allow_html=True)
-
-    # Show content based on selected tab
-    if st.session_state.selected_tab == "Sentiment Exploration":
-        # Show image above the text area
-        try:
-            with open("SA_new.jpg", "rb") as image_file:
-                encoded_image = base64.b64encode(image_file.read()).decode()
-            st.markdown(
-                f"""
-                <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
-                    <img src="data:image/jpg;base64,{encoded_image}" style="width: 80%; max-width: 1000px; border-radius: 10px;" />
-                </div>
-                <div style="display: flex; justify-content: center; align-items: center; width: 100%;">
-                    <p style="font-size: 14px; margin: 0; color: #333;">
-                        Image created by Yarin Horev using Ideogram (AI system by OpenAI), Date: March 3, 2025.
-                    </p>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
-        except FileNotFoundError:
-            st.error("Image SA_new.jpg not found in the app directory.")
-
         user_input = st.text_area("Enter your review here:")
-
-        def sentiment_analyzer(text):
-            inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True)
-            outputs = model(**inputs)
-            probs = torch.nn.functional.softmax(outputs.logits, dim=-1)
-            positive_score = probs[0, 1].item()  # Probability of positive class
-            prediction = torch.argmax(outputs.logits, dim=-1).item()
-            return prediction, positive_score
 
         if 'history' not in st.session_state:
             st.session_state.history = []
@@ -173,34 +165,30 @@ if main_section == "SA Interface":
             else:
                 st.warning("Please enter a review to analyze.")
 
-        if st.session_state.history:
-            st.subheader("History")
-            history_df = pd.DataFrame(st.session_state.history)
-            if "Score" in history_df.columns:
-                history_df = history_df[["Review", "Sentiment", "Score"]]
-            st.dataframe(history_df)
+    elif st.session_state.active_tab == "Review History":
+        st.markdown("<h2 style='text-align:center;'>Review History</h2>", unsafe_allow_html=True)
 
-    elif st.session_state.selected_tab == "Review History":
-        show_breadcrumbs(["SA Interface", "Review History"])
-        st.subheader("Review History")
-        if st.session_state.history:
-            history_df = pd.DataFrame(st.session_state.history)
-            if "Score" in history_df.columns:
-                history_df = history_df[["Review", "Sentiment", "Score"]]
-            st.dataframe(history_df)
+        if 'history' not in st.session_state or not st.session_state.history:
+            st.info("No history available. Analyze some reviews first.")
         else:
-            st.info("No review history yet.")
+            history_df = pd.DataFrame(st.session_state.history)
+            if "Score" in history_df.columns:
+                history_df = history_df[["Review", "Sentiment", "Score"]]
+            st.dataframe(history_df)
 
-    elif st.session_state.selected_tab == "Review Analysis":
-        show_breadcrumbs(["SA Interface", "Review Analysis"])
-        st.subheader("Review Analysis")
-        st.markdown("Here you can see the different opinions and their sentiment.")
+    elif st.session_state.active_tab == "Review Analysis":
+        st.markdown("<h2 style='text-align:center;'>Review Analysis</h2>", unsafe_allow_html=True)
+        st.markdown(
+            "<p style='text-align:center;'>Here you can see the different opinions and their sentiment.</p>",
+            unsafe_allow_html=True
+        )
+        # Embed Looker Studio Dashboard (adjust width and height so no scrolling)
         st.markdown(
             """
             <div style="text-align: center;">
-                <iframe width="1100" height="650" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
-                        frameborder="0" allowfullscreen 
-                        sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
+                <iframe width="900" height="600" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
+                        frameborder="0" style="border:0;" allowfullscreen 
+                        sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
                 </iframe>
             </div>
             """,
@@ -208,9 +196,6 @@ if main_section == "SA Interface":
         )
 
 elif main_section == "BI Dashboards":
-    # Breadcrumbs only once at top
-    show_breadcrumbs(["BI Dashboards"])
-
     dashboard_page = st.sidebar.radio("Select a BI Dashboard", ["Sentiment Trends", "Route Insights"])
 
     if dashboard_page == "Sentiment Trends":
@@ -220,7 +205,7 @@ elif main_section == "BI Dashboards":
         st.markdown(
             """
             <div style="text-align: center;">
-                <iframe width="1100" height="650" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
+                <iframe width="900" height="600" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
                         frameborder="0" style="border:0;" allowfullscreen 
                         sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
                 </iframe>
@@ -236,12 +221,11 @@ elif main_section == "BI Dashboards":
     elif dashboard_page == "Route Insights":
         st.title("BI Dashboard: Route Insights")
         st.write("Insights to route-specific review patterns and satisfaction levels of airline customers.")
-
         st.markdown(
             """
             <div style="text-align: center;">
                 <iframe src="https://lookerstudio.google.com/embed/reporting/b5f009bf-6c85-41b0-b70e-af26d686eb68/page/G6bFF"
-                        width="1100" height="650" style="border:none;">
+                        width="900" height="600" style="border:none;">
                 </iframe>
             </div>
             """,
