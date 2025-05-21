@@ -7,15 +7,16 @@ import base64
 # Set wide layout and force sidebar to be expanded
 st.set_page_config(layout="wide", initial_sidebar_state="expanded")
 
-# CSS styles for breadcrumb and tabs
+# CSS styles for breadcrumb, tabs, and headings
 st.markdown(
     """
     <style>
-        /* Breadcrumb at top-left corner */
+        /* Breadcrumb at top-left corner with font similar to main heading */
         .breadcrumb {
-            font-size: 14px;
+            font-family: 'Arial Black', Gadget, sans-serif;
+            font-size: 22px;
+            font-weight: 900;
             color: #1a73e8;
-            font-weight: 600;
             margin-bottom: 10px;
         }
 
@@ -54,13 +55,23 @@ st.markdown(
             display: block;
             margin: 0 auto;
         }
+
+        /* Main heading style */
+        .main-heading {
+            font-family: 'Arial Black', Gadget, sans-serif;
+            font-size: 32px;
+            font-weight: 900;
+            color: #0b47a1;
+            text-align: center;
+            margin-bottom: 15px;
+        }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
 def show_breadcrumbs(items):
-    # Show breadcrumb as clickable items separated by >
+    # Show breadcrumb as simple text separated by >
     breadcrumb_html = " &gt; ".join(
         [f"<span class='breadcrumb'>{item}</span>" for item in items]
     )
@@ -103,7 +114,7 @@ if main_section == "SA Interface":
     if "active_tab" not in st.session_state:
         st.session_state.active_tab = "Sentiment Exploration"
 
-    # Show breadcrumbs at top left
+    # Show breadcrumbs at top left with correct active tab name
     show_breadcrumbs(["Home", "SA Interface", st.session_state.active_tab])
 
     # Tabs UI
@@ -111,14 +122,13 @@ if main_section == "SA Interface":
     for idx, tab in enumerate(tabs):
         is_selected = (tab == st.session_state.active_tab)
         tab_class = "tab selected" if is_selected else "tab"
-        # Use buttons to switch tabs
         with cols[idx]:
             if st.button(tab, key=f"tab_{tab}"):
                 st.session_state.active_tab = tab
 
     # Content for each tab
     if st.session_state.active_tab == "Sentiment Exploration":
-        st.markdown("<h2 style='text-align:center;'>Sentiment Analysis of Airline Reviews</h2>", unsafe_allow_html=True)
+        st.markdown('<h1 class="main-heading">Sentiment Analysis of Airline Reviews</h1>', unsafe_allow_html=True)
 
         encoded_image = get_base64_image("SA_new.jpg")
         st.markdown(
@@ -161,7 +171,7 @@ if main_section == "SA Interface":
                 st.warning("Please enter a review to analyze.")
 
     elif st.session_state.active_tab == "Review History":
-        st.markdown("<h2 style='text-align:center;'>Review History</h2>", unsafe_allow_html=True)
+        st.markdown('<h1 class="main-heading">Review History</h1>', unsafe_allow_html=True)
 
         if 'history' not in st.session_state or not st.session_state.history:
             st.info("No history available. Analyze some reviews first.")
@@ -172,16 +182,16 @@ if main_section == "SA Interface":
             st.dataframe(history_df)
 
     elif st.session_state.active_tab == "Review Analysis":
-        st.markdown("<h2 style='text-align:center;'>Review Analysis</h2>", unsafe_allow_html=True)
+        st.markdown('<h1 class="main-heading">Review Analysis</h1>', unsafe_allow_html=True)
         st.markdown(
             "<p style='text-align:center;'>Here you can see the different opinions and their sentiment.</p>",
             unsafe_allow_html=True
         )
-        # Embed Looker Studio Dashboard (adjust width and height so no scrolling)
+        # Embed Looker Studio Dashboard (wider iframe)
         st.markdown(
             """
             <div style="text-align: center;">
-                <iframe width="900" height="600" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
+                <iframe width="1100" height="600" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
                         frameborder="0" style="border:0;" allowfullscreen 
                         sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
                 </iframe>
@@ -197,13 +207,13 @@ elif main_section == "BI Dashboards":
         # Show breadcrumbs at top-left for BI Dashboards > Sentiment Trends
         show_breadcrumbs(["Home", "BI Dashboards", "Sentiment Trends"])
 
-        st.title("Sentiment Trends")
-        st.write("Insights on sentiment and customer experience metrics. An Overview on sentiment trends over time.")
+        st.markdown('<h1 class="main-heading">Sentiment Trends</h1>', unsafe_allow_html=True)
+        st.write("Insights on sentiment and customer experience metrics. An overview on sentiment trends over time.")
 
         st.markdown(
             """
             <div style="text-align: center;">
-                <iframe width="900" height="600" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
+                <iframe width="1100" height="600" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
                         frameborder="0" style="border:0;" allowfullscreen 
                         sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
                 </iframe>
@@ -220,14 +230,14 @@ elif main_section == "BI Dashboards":
         # Show breadcrumbs at top-left for BI Dashboards > Route Insights
         show_breadcrumbs(["Home", "BI Dashboards", "Route Insights"])
 
-        st.title("Route Insights")
+        st.markdown('<h1 class="main-heading">Route Insights</h1>', unsafe_allow_html=True)
         st.write("Insights to route-specific review patterns and satisfaction levels of airline customers.")
 
         st.markdown(
             """
             <div style="text-align: center;">
                 <iframe src="https://lookerstudio.google.com/embed/reporting/b5f009bf-6c85-41b0-b70e-af26d686eb68/page/G6bFF"
-                        width="900" height="600" style="border:none;">
+                        width="1100" height="600" style="border:none;">
                 </iframe>
             </div>
             """,
