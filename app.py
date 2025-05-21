@@ -5,195 +5,174 @@ import pandas as pd
 import base64
 
 # Set page config
-st.set_page_config(layout="wide", initial_sidebar_state="expanded", page_title="Sentiment Dashboard")
+st.set_page_config(layout="wide", page_title="Sentiment Dashboard")
 
-# Load model and tokenizer
+# Load model
 model_repo = "emelybs/Sentiment_Analysis_Project_BA"
-try:
-    tokenizer = AutoTokenizer.from_pretrained(model_repo)
-    model = AutoModelForSequenceClassification.from_pretrained(model_repo, revision="main", use_safetensors=True)
-except Exception as e:
-    st.error(f"Error loading model: {e}")
-    st.stop()
+tokenizer = AutoTokenizer.from_pretrained(model_repo)
+model = AutoModelForSequenceClassification.from_pretrained(model_repo, revision="main", use_safetensors=True)
 
-# CSS styling
+# Init session state
+if "section" not in st.session_state:
+    st.session_state.section = "SA Interface"
+if "sub_section" not in st.session_state:
+    st.session_state.sub_section = "Exploration"
+
+# Styling
 st.markdown("""
     <style>
         body {
             background-color: #f0f4f8;
         }
-        .main {
-            background-color: #f0f8ff;
-        }
-        .nav-button {
-            background-color: #1f3b73;
-            color: white;
-            padding: 8px 20px;
-            border-radius: 10px;
-            margin: 0 10px;
-            font-size: 16px;
+        .sidebar-title {
             font-weight: bold;
-            border: none;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .nav-link {
+            color: #1f3b73;
+            font-size: 18px;
+            margin: 5px 0;
             cursor: pointer;
         }
-        .nav-button.active {
-            background-color: #4da8da;
-            color: white;
+        .nav-link:hover {
+            color: #4da8da;
         }
-        .sub-nav {
-            margin-left: 20px;
-            margin-top: 10px;
-        }
-        .breadcrumb {
-            font-size: 18px;
-            color: #1f3b73;
+        .nav-active {
+            color: #4da8da;
             font-weight: bold;
-            padding: 5px 0 15px;
+        }
+        .sub-link {
+            margin-left: 15px;
+            font-size: 16px;
+            color: #24427c;
+            cursor: pointer;
+        }
+        .sub-link:hover {
+            color: #4da8da;
+        }
+        .sub-active {
+            color: #4da8da;
+            font-weight: bold;
         }
     </style>
 """, unsafe_allow_html=True)
 
-# Sidebar navigation - custom logic
-if "main_section" not in st.session_state:
-    st.session_state.main_section = "SA Interface"
-if "bi_subsection" not in st.session_state:
-    st.session_state.bi_subsection = "Sentiment Trends"
-if "sa_tab" not in st.session_state:
-    st.session_state.sa_tab = "Sentiment Exploration"
+# Sidebar navigation
+st.sidebar.markdown('<div class="sidebar-title">Navigation</div>', unsafe_allow_html=True)
 
-st.sidebar.markdown("### Navigation")
+def nav_link(name):
+    css_class = "nav-link"
+    if st.session_state.section == name:
+        css_class += " nav-active"
+    return st.sidebar.markdown(f'<div class="{css_class}" onclick="window.location.href=\'#{name}\'">{name}</div>', unsafe_allow_html=True)
 
-col1, col2 = st.sidebar.columns([1, 1])
-if col1.button("SA Interface", use_container_width=True):
-    st.session_state.main_section = "SA Interface"
-if col2.button("BI Dashboards", use_container_width=True):
-    st.session_state.main_section = "BI Dashboards"
+def sub_link(name, parent):
+    if st.session_state.section != parent:
+        return
+    css_class = "sub-link"
+    if st.session_state.sub_section == name:
+        css_class += " sub-active"
+    return st.sidebar.markdown(f'<div class="{css_class}" onclick="window.location.href=\'#{name}\'">{name}</div>', unsafe_allow_html=True)
 
-if st.session_state.main_section == "SA Interface":
-    st.sidebar.markdown("#### Subtabs")
-    tab1, tab2, tab3 = st.sidebar.columns([1, 1, 1])
-    if tab1.button("Exploration"):
-        st.session_state.sa_tab = "Sentiment Exploration"
-    if tab2.button("History"):
-        st.session_state.sa_tab = "Review History"
-    if tab3.button("Analysis"):
-        st.session_state.sa_tab = "Review Analysis"
+nav_link("SA Interface")
+sub_link("Exploration", "SA Interface")
+sub_link("History", "SA Interface")
+sub_link("Review Analysis", "SA Interface")
 
-    st.markdown(f'<div class="breadcrumb">{st.session_state.sa_tab}</div>', unsafe_allow_html=True)
+nav_link("BI Dashboards")
+sub_link("Sentiment Trends", "BI Dashboards")
+sub_link("Route Insights", "BI Dashboards")
 
-    if st.session_state.sa_tab == "Sentiment Exploration":
-        st.markdown(
-            """
-            <h3 style="text-align: center; color: #1f3b73;">Sentiment Analysis on Airline Reviews</h3>
-            <hr style="width:50%; margin:auto;">
-            """,
-            unsafe_allow_html=True
-        )
-        encoded_image = base64.b64encode(open("SA_new.jpg", "rb").read()).decode()
-        st.markdown(
-            f"""
-            <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
-                <img src="data:image/jpg;base64,{encoded_image}" style="width: 80%; max-width: 1000px; border-radius: 10px;" />
-            </div>
-            <div style="text-align: center;">
-                <p style="font-size: 14px;">Image created by Yarin Horev using Ideogram, March 3, 2025.</p>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+# Handle hash-based navigation (simulate clicks)
+js = """
+<script>
+const sections = ["SA Interface", "BI Dashboards"];
+const subSections = ["Exploration", "History", "Review Analysis", "Sentiment Trends", "Route Insights"];
+window.addEventListener("hashchange", function() {
+    const hash = decodeURIComponent(window.location.hash.substring(1));
+    if (sections.includes(hash)) {
+        window.parent.postMessage({type: 'streamlit:setComponentValue', key: 'section', value: hash}, '*');
+    } else if (subSections.includes(hash)) {
+        window.parent.postMessage({type: 'streamlit:setComponentValue', key: 'sub_section', value: hash}, '*');
+    }
+});
+</script>
+"""
+st.components.v1.html(js)
 
-        user_input = st.text_area("Enter your review here:")
+# -------- Content --------
+st.title(st.session_state.sub_section)
 
-        def sentiment_analyzer(text):
-            inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True)
+if st.session_state.sub_section == "Exploration":
+    st.markdown("<h4 style='text-align:center; color:#1f3b73;'>Sentiment Analysis on Airline Reviews</h4>", unsafe_allow_html=True)
+    encoded_image = base64.b64encode(open("SA_new.jpg", "rb").read()).decode()
+    st.markdown(
+        f"""
+        <div style="display: flex; justify-content: center;">
+            <img src="data:image/jpg;base64,{encoded_image}" style="width: 80%; max-width: 800px; border-radius: 10px;" />
+        </div>
+        <p style="text-align:center; font-size:14px;">Image created by Yarin Horev using Ideogram, March 3, 2025.</p>
+        """, unsafe_allow_html=True)
+
+    review = st.text_area("Enter your review:")
+    if st.button("Analyze"):
+        if review.strip():
+            inputs = tokenizer(review, return_tensors="pt", truncation=True, padding=True)
             outputs = model(**inputs)
             probs = torch.nn.functional.softmax(outputs.logits, dim=-1)
-            positive_score = probs[0, 1].item()
-            prediction = torch.argmax(outputs.logits, dim=-1).item()
-            return prediction, positive_score
-
-        if 'history' not in st.session_state:
-            st.session_state.history = []
-
-        if st.button("Analyze Sentiment"):
-            if user_input:
-                sentiment, score = sentiment_analyzer(user_input)
-                sentiment_label = "Positive 😊" if sentiment == 1 else "Negative 😞"
-                prediction_color = "#66cc66" if sentiment == 1 else "#ff6666"
-
-                st.markdown(f"""
-                    <div style="background-color:{prediction_color}; padding: 10px; border-radius: 5px; color: white; text-align: center;">
-                        <h4>Prediction: {sentiment_label} (Score: {score:.2f})</h4>
-                    </div>
-                """, unsafe_allow_html=True)
-
-                st.session_state.history.append({
-                    "Review": user_input,
-                    "Sentiment": sentiment_label,
-                    "Score": score
-                })
-            else:
-                st.warning("Please enter a review to analyze.")
-
-    elif st.session_state.sa_tab == "Review History":
-        st.subheader("Review History")
-        if st.session_state.get("history"):
-            df = pd.DataFrame(st.session_state.history)
-            st.dataframe(df[["Review", "Sentiment", "Score"]])
+            sentiment = torch.argmax(outputs.logits, dim=-1).item()
+            label = "Positive 😊" if sentiment == 1 else "Negative 😞"
+            score = probs[0, 1].item()
+            color = "#66cc66" if sentiment == 1 else "#ff6666"
+            st.markdown(f"""
+                <div style="background-color:{color}; padding: 10px; border-radius: 5px; color: white; text-align: center;">
+                    <h4>{label} (Score: {score:.2f})</h4>
+                </div>
+            """, unsafe_allow_html=True)
         else:
-            st.info("No history yet. Submit a review to analyze.")
+            st.warning("Please enter a review.")
 
-    elif st.session_state.sa_tab == "Review Analysis":
-        st.subheader("Review Analysis")
-        st.write("Here you can see the different opinions and their sentiment.")
-        st.markdown(
-            """
-            <div style="text-align: center;">
-                <iframe width="1500" height="900" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
-                        frameborder="0" style="border:0;" allowfullscreen 
-                        sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
-                </iframe>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+elif st.session_state.sub_section == "History":
+    st.subheader("Review History")
+    if "history" in st.session_state:
+        df = pd.DataFrame(st.session_state.history)
+        st.dataframe(df)
+    else:
+        st.info("No history yet.")
 
-elif st.session_state.main_section == "BI Dashboards":
-    st.sidebar.markdown("#### BI Dashboards")
-    st.sidebar.markdown("<div class='sub-nav'>", unsafe_allow_html=True)
-    if st.sidebar.button("Sentiment Trends"):
-        st.session_state.bi_subsection = "Sentiment Trends"
-    if st.sidebar.button("Route Insights"):
-        st.session_state.bi_subsection = "Route Insights"
-    st.sidebar.markdown("</div>", unsafe_allow_html=True)
+elif st.session_state.sub_section == "Review Analysis":
+    st.subheader("Review Analysis")
+    st.write("Here you can see the different opinions and their sentiment.")
+    st.markdown(
+        """
+        <div style="text-align:center;">
+            <iframe width="1200" height="600" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
+                frameborder="0" style="border:0;" allowfullscreen></iframe>
+        </div>
+        """, unsafe_allow_html=True
+    )
 
-    st.markdown(f'<div class="breadcrumb">{st.session_state.bi_subsection}</div>', unsafe_allow_html=True)
+elif st.session_state.sub_section == "Sentiment Trends":
+    st.subheader("BI Dashboard: Sentiment Trends")
+    st.write("Insights on sentiment and customer experience metrics over time.")
+    st.markdown(
+        """
+        <div style="text-align:center;">
+            <iframe width="1200" height="600" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
+                frameborder="0" style="border:0;" allowfullscreen></iframe>
+        </div>
+        """, unsafe_allow_html=True
+    )
 
-    if st.session_state.bi_subsection == "Sentiment Trends":
-        st.title("BI Dashboard: Sentiment Trends")
-        st.write("Insights on sentiment and customer experience metrics over time.")
-        st.markdown(
-            """
-            <div style="text-align: center;">
-                <iframe width="1500" height="900" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
-                        frameborder="0" style="border:0;" allowfullscreen 
-                        sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
-                </iframe>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-    elif st.session_state.bi_subsection == "Route Insights":
-        st.title("BI Dashboard: Route Insights")
-        st.write("Review patterns and satisfaction levels per route.")
-        st.markdown(
-            """
-            <div style="text-align: center;">
-                <iframe src="https://lookerstudio.google.com/embed/reporting/b5f009bf-6c85-41b0-b70e-af26d686eb68/page/G6bFF"
-                        width="1500" height="900" style="border:none;">
-                </iframe>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+elif st.session_state.sub_section == "Route Insights":
+    st.subheader("BI Dashboard: Route Insights")
+    st.write("Review patterns and satisfaction levels per route.")
+    st.markdown(
+        """
+        <div style="text-align:center;">
+            <iframe width="1200" height="600" src="https://lookerstudio.google.com/embed/reporting/b5f009bf-6c85-41b0-b70e-af26d686eb68/page/G6bFF"
+                frameborder="0" style="border:0;" allowfullscreen></iframe>
+        </div>
+        """, unsafe_allow_html=True
+    )
