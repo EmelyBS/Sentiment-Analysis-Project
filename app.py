@@ -80,7 +80,7 @@ except Exception as e:
 
 # Sidebar navigation
 st.sidebar.title("Navigation")
-main_section = st.sidebar.radio("Choose Section", ["Home", "Sentiment Analysis Simulator", "Business Intelligence Dashboards"])
+main_section = st.sidebar.radio("Choose Section", ["Home", "SA Interface", "BI Dashboards"])
 
 # Helper function to get base64 image
 def get_base64_image(image_path):
@@ -101,7 +101,7 @@ def sentiment_analyzer(text):
 if main_section == "Home":
     show_breadcrumbs(["Home"])
 
-    st.markdown("<h2>Voice of the Customer in Aviation</h2>", unsafe_allow_html=True)
+    st.markdown("<h2>Sentiment Analysis for Airline Reviews</h2>", unsafe_allow_html=True)
 
     encoded_image = get_base64_image("SA_new.jpg")
     st.markdown(
@@ -116,23 +116,23 @@ if main_section == "Home":
         </div>
         <div style="text-align: center; font-size: 16px; max-width: 900px; margin: 0 auto;">
             <p>
-                What are your passengers really thinking?
-                In the fast-paced aviation industry, customer reviews are more than just opinions—they're insights.
-                Capturing the Voice of the Customer (VoC) through reviews helps airlines understand real experiences, from seat comfort to service quality.
-                Sentiment analysis turns this feedback into data-driven insights by detecting emotions and trends at scale. With this, airlines can enhance services, boost satisfaction, and stay ahead in a competitive market.
+                This project utilizes a fine-tuned BERT model to automatically analyze customer reviews from airline passengers.
+                The goal is to predict the sentiment (positive or negative) of each review and extract insights into customer satisfaction levels.
+                Through interactive dashboards and real-time sentiment analysis, users can explore feedback trends and gain a deeper understanding
+                of what drives positive and negative customer experiences in the airline industry.
             </p>
         </div>
         """,
         unsafe_allow_html=True
     )
 
-# Sentiment Analysis Simulator
-elif main_section == "Sentiment Analysis Simulator":
+# SA Interface
+elif main_section == "SA Interface":
     tabs = ["Sentiment Exploration", "Review History", "Review Analysis"]
     if "active_tab" not in st.session_state:
         st.session_state.active_tab = "Sentiment Exploration"
 
-    show_breadcrumbs(["Home", "Sentiment Analysis Simulator", st.session_state.active_tab])
+    show_breadcrumbs(["Home", "SA Interface", st.session_state.active_tab])
 
     cols = st.columns(len(tabs))
     for idx, tab in enumerate(tabs):
@@ -212,12 +212,12 @@ elif main_section == "Sentiment Analysis Simulator":
             unsafe_allow_html=True
         )
 
-# Business Intelligence Dashboards
-elif main_section == "Business Intelligence Dashboards":
+# BI Dashboards
+elif main_section == "BI Dashboards":
     dashboard_page = st.sidebar.radio("Select a BI Dashboard", ["Sentiment Trends", "Route Insights"])
 
     if dashboard_page == "Sentiment Trends":
-        show_breadcrumbs(["Home", "Business Intelligence Dashboards", "Sentiment Trends"])
+        show_breadcrumbs(["Home", "BI Dashboards", "Sentiment Trends"])
 
         st.markdown("<h2>Sentiment Trends</h2>", unsafe_allow_html=True)
         st.write("Insights on sentiment and customer experience metrics. An overview on sentiment trends over time.")
@@ -235,17 +235,16 @@ elif main_section == "Business Intelligence Dashboards":
         )
 
     elif dashboard_page == "Route Insights":
-        show_breadcrumbs(["Home", "Business Intelligence Dashboards", "Route Insights"])
+        show_breadcrumbs(["Home", "BI Dashboards", "Route Insights"])
 
         st.markdown("<h2>Route Insights</h2>", unsafe_allow_html=True)
-        st.write("Performance and sentiment per route and airline.")
+        st.write("Insights to route-specific review patterns and satisfaction levels of airline customers.")
 
         st.markdown(
             """
             <div style="text-align: center;">
-                <iframe width="1000" height="600" src="https://lookerstudio.google.com/embed/reporting/f65e8234-99e4-4131-8886-c27e08d01a62/page/fpjH"
-                        frameborder="0" style="border:0;" allowfullscreen 
-                        sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
+                <iframe src="https://lookerstudio.google.com/embed/reporting/b5f009bf-6c85-41b0-b70e-af26d686eb68/page/G6bFF"
+                        width="1000" height="600" style="border:none;">
                 </iframe>
             </div>
             """,
