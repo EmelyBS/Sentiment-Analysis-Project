@@ -80,7 +80,7 @@ except Exception as e:
 
 # Sidebar navigation
 st.sidebar.title("Navigation")
-main_section = st.sidebar.radio("Choose Section", ["Home", "SA Interface", "BI Dashboards"])
+main_section = st.sidebar.radio("Choose Section", ["Home", "Sentiment Analysis Simulator", "Business Intelligence Dashboards"])
 
 # Helper function to get base64 image
 def get_base64_image(image_path):
@@ -101,8 +101,25 @@ def sentiment_analyzer(text):
 if main_section == "Home":
     show_breadcrumbs(["Home"])
 
-    st.markdown("<h2>Sentiment Analysis for Airline Reviews</h2>", unsafe_allow_html=True)
+    st.markdown("<h2>Voice of the Customer in Aviation</h2>", unsafe_allow_html=True)
 
+    # Text above the picture
+    st.markdown(
+        """
+        <div style="text-align: center; font-size: 16px; max-width: 900px; margin: 0 auto 20px auto;">
+            <p>
+                What are your passengers really thinking?  
+                In the fast-paced aviation industry, customer reviews are more than just opinions—they're insights.  
+                Capturing the Voice of the Customer (VoC) through reviews helps airlines understand real experiences, from seat comfort to service quality.  
+                Sentiment analysis turns this feedback into data-driven insights by detecting emotions and trends at scale.  
+                With this, airlines can enhance services, boost satisfaction, and stay ahead in a competitive market.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # Display the image
     encoded_image = get_base64_image("SA_new.jpg")
     st.markdown(
         f"""
@@ -114,25 +131,31 @@ if main_section == "Home":
                 Image created by Yarin Horev using Ideogram (AI system by OpenAI), Date: March 3, 2025.
             </p>
         </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # Text below the picture
+    st.markdown(
+        """
         <div style="text-align: center; font-size: 16px; max-width: 900px; margin: 0 auto;">
             <p>
-                This project utilizes a fine-tuned BERT model to automatically analyze customer reviews from airline passengers.
-                The goal is to predict the sentiment (positive or negative) of each review and extract insights into customer satisfaction levels.
-                Through interactive dashboards and real-time sentiment analysis, users can explore feedback trends and gain a deeper understanding
-                of what drives positive and negative customer experiences in the airline industry.
+                This site aims to understand public sentiment from Skytrax data for different airlines, focusing on identifying drivers of positive and negative sentiments.  
+                We represent a business intelligence system designed to analyze and present insights of verified reviews.  
+                The goal is to identify key areas of customer satisfaction and dissatisfaction and uncover sentiment trends that can inform airline service improvements and strategic decision-making.
             </p>
         </div>
         """,
         unsafe_allow_html=True
     )
 
-# SA Interface
-elif main_section == "SA Interface":
+# Sentiment Analysis Simulator
+elif main_section == "Sentiment Analysis Simulator":
     tabs = ["Sentiment Exploration", "Review History", "Review Analysis"]
     if "active_tab" not in st.session_state:
         st.session_state.active_tab = "Sentiment Exploration"
 
-    show_breadcrumbs(["Home", "SA Interface", st.session_state.active_tab])
+    show_breadcrumbs(["Home", "Sentiment Analysis Simulator", st.session_state.active_tab])
 
     cols = st.columns(len(tabs))
     for idx, tab in enumerate(tabs):
@@ -202,51 +225,23 @@ elif main_section == "SA Interface":
 
         st.markdown(
             """
-            <div style="text-align: center;">
-                <iframe width="1000" height="600" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
-                        frameborder="0" style="border:0;" allowfullscreen 
-                        sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
-                </iframe>
-            </div>
+            <ul>
+                <li><b>Positive</b>: Reviews expressing satisfaction and good experience.</li>
+                <li><b>Negative</b>: Reviews highlighting problems or dissatisfaction.</li>
+            </ul>
             """,
-            unsafe_allow_html=True
+            unsafe_allow_html=True,
         )
 
-# BI Dashboards
-elif main_section == "BI Dashboards":
-    dashboard_page = st.sidebar.radio("Select a BI Dashboard", ["Sentiment Trends", "Route Insights"])
+# Business Intelligence Dashboards
+elif main_section == "Business Intelligence Dashboards":
+    show_breadcrumbs(["Business Intelligence Dashboards"])
+    st.markdown("<h2>Business Intelligence Dashboards</h2>", unsafe_allow_html=True)
+    st.markdown(
+        """
+        This section will contain airline KPIs dashboards to visualize sentiment trends, customer satisfaction drivers, and operational metrics.
+        """,
+        unsafe_allow_html=True,
+    )
 
-    if dashboard_page == "Sentiment Trends":
-        show_breadcrumbs(["Home", "BI Dashboards", "Sentiment Trends"])
-
-        st.markdown("<h2>Sentiment Trends</h2>", unsafe_allow_html=True)
-        st.write("Insights on sentiment and customer experience metrics. An overview on sentiment trends over time.")
-
-        st.markdown(
-            """
-            <div style="text-align: center;">
-                <iframe width="1000" height="600" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
-                        frameborder="0" style="border:0;" allowfullscreen 
-                        sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
-                </iframe>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-    elif dashboard_page == "Route Insights":
-        show_breadcrumbs(["Home", "BI Dashboards", "Route Insights"])
-
-        st.markdown("<h2>Route Insights</h2>", unsafe_allow_html=True)
-        st.write("Insights to route-specific review patterns and satisfaction levels of airline customers.")
-
-        st.markdown(
-            """
-            <div style="text-align: center;">
-                <iframe src="https://lookerstudio.google.com/embed/reporting/b5f009bf-6c85-41b0-b70e-af26d686eb68/page/G6bFF"
-                        width="1000" height="600" style="border:none;">
-                </iframe>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+# Footer or any additional global code here
