@@ -7,20 +7,16 @@ import base64
 # Set wide layout and force sidebar to be expanded
 st.set_page_config(layout="wide", initial_sidebar_state="expanded")
 
-# CSS styles for breadcrumb, tabs, and headings
+# CSS styles
 st.markdown(
     """
     <style>
-        /* Breadcrumb at top-left corner with font similar to main heading */
         .breadcrumb {
-            font-family: 'Arial Black', Gadget, sans-serif;
-            font-size: 22px;
-            font-weight: 900;
+            font-size: 14px;
             color: #1a73e8;
+            font-weight: 600;
             margin-bottom: 10px;
         }
-
-        /* Tabs container with underline */
         .tabs-container {
             display: flex;
             justify-content: center;
@@ -30,8 +26,6 @@ st.markdown(
             border-bottom: 2px solid #1a73e8;
             padding-bottom: 8px;
         }
-
-        /* Tabs styling */
         .tab {
             cursor: pointer;
             font-weight: 600;
@@ -44,8 +38,6 @@ st.markdown(
             border-bottom: 3px solid #0b47a1;
             color: #0b47a1;
         }
-
-        /* Button style for Analyze Sentiment */
         .stButton>button {
             background-color: #003366;
             color: white;
@@ -55,15 +47,13 @@ st.markdown(
             display: block;
             margin: 0 auto;
         }
-
-        /* Main heading style */
-        .main-heading {
-            font-family: 'Arial Black', Gadget, sans-serif;
-            font-size: 32px;
-            font-weight: 900;
-            color: #0b47a1;
+        h2 {
+            font-family: 'Arial', sans-serif;
+            font-size: 28px !important;
+            font-weight: 700;
+            color: #003366;
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
     </style>
     """,
@@ -71,7 +61,6 @@ st.markdown(
 )
 
 def show_breadcrumbs(items):
-    # Show breadcrumb as simple text separated by >
     breadcrumb_html = " &gt; ".join(
         [f"<span class='breadcrumb'>{item}</span>" for item in items]
     )
@@ -104,20 +93,17 @@ def sentiment_analyzer(text):
     inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True)
     outputs = model(**inputs)
     probs = torch.nn.functional.softmax(outputs.logits, dim=-1)
-    positive_score = probs[0, 1].item()  # Probability of positive class
+    positive_score = probs[0, 1].item()
     prediction = torch.argmax(outputs.logits, dim=-1).item()
     return prediction, positive_score
 
 if main_section == "SA Interface":
-    # Tabs for SA Interface
     tabs = ["Sentiment Exploration", "Review History", "Review Analysis"]
     if "active_tab" not in st.session_state:
         st.session_state.active_tab = "Sentiment Exploration"
 
-    # Show breadcrumbs at top left with correct active tab name
     show_breadcrumbs(["Home", "SA Interface", st.session_state.active_tab])
 
-    # Tabs UI
     cols = st.columns(len(tabs))
     for idx, tab in enumerate(tabs):
         is_selected = (tab == st.session_state.active_tab)
@@ -126,9 +112,8 @@ if main_section == "SA Interface":
             if st.button(tab, key=f"tab_{tab}"):
                 st.session_state.active_tab = tab
 
-    # Content for each tab
     if st.session_state.active_tab == "Sentiment Exploration":
-        st.markdown('<h1 class="main-heading">Sentiment Analysis of Airline Reviews</h1>', unsafe_allow_html=True)
+        st.markdown("<h2>Sentiment Analysis of Airline Reviews</h2>", unsafe_allow_html=True)
 
         encoded_image = get_base64_image("SA_new.jpg")
         st.markdown(
@@ -171,7 +156,7 @@ if main_section == "SA Interface":
                 st.warning("Please enter a review to analyze.")
 
     elif st.session_state.active_tab == "Review History":
-        st.markdown('<h1 class="main-heading">Review History</h1>', unsafe_allow_html=True)
+        st.markdown("<h2>Review History</h2>", unsafe_allow_html=True)
 
         if 'history' not in st.session_state or not st.session_state.history:
             st.info("No history available. Analyze some reviews first.")
@@ -182,16 +167,13 @@ if main_section == "SA Interface":
             st.dataframe(history_df)
 
     elif st.session_state.active_tab == "Review Analysis":
-        st.markdown('<h1 class="main-heading">Review Analysis</h1>', unsafe_allow_html=True)
-        st.markdown(
-            "<p style='text-align:center;'>Here you can see the different opinions and their sentiment.</p>",
-            unsafe_allow_html=True
-        )
-        # Embed Looker Studio Dashboard (wider iframe)
+        st.markdown("<h2>Review Analysis</h2>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align:center;'>Here you can see the different opinions and their sentiment.</p>", unsafe_allow_html=True)
+
         st.markdown(
             """
             <div style="text-align: center;">
-                <iframe width="1100" height="600" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
+                <iframe width="1000" height="600" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
                         frameborder="0" style="border:0;" allowfullscreen 
                         sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
                 </iframe>
@@ -204,16 +186,15 @@ elif main_section == "BI Dashboards":
     dashboard_page = st.sidebar.radio("Select a BI Dashboard", ["Sentiment Trends", "Route Insights"])
 
     if dashboard_page == "Sentiment Trends":
-        # Show breadcrumbs at top-left for BI Dashboards > Sentiment Trends
         show_breadcrumbs(["Home", "BI Dashboards", "Sentiment Trends"])
 
-        st.markdown('<h1 class="main-heading">Sentiment Trends</h1>', unsafe_allow_html=True)
+        st.markdown("<h2>Sentiment Trends</h2>", unsafe_allow_html=True)
         st.write("Insights on sentiment and customer experience metrics. An overview on sentiment trends over time.")
 
         st.markdown(
             """
             <div style="text-align: center;">
-                <iframe width="1100" height="600" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
+                <iframe width="1000" height="600" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
                         frameborder="0" style="border:0;" allowfullscreen 
                         sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
                 </iframe>
@@ -222,28 +203,19 @@ elif main_section == "BI Dashboards":
             unsafe_allow_html=True
         )
 
-        st.markdown(
-            "[Click here to view the Sentiment Trends dashboard in a new tab.](https://lookerstudio.google.com/reporting/b5f009bf-6c85-41b0-b70e-af26d686eb68/page/G6bFF)"
-        )
-
     elif dashboard_page == "Route Insights":
-        # Show breadcrumbs at top-left for BI Dashboards > Route Insights
         show_breadcrumbs(["Home", "BI Dashboards", "Route Insights"])
 
-        st.markdown('<h1 class="main-heading">Route Insights</h1>', unsafe_allow_html=True)
+        st.markdown("<h2>Route Insights</h2>", unsafe_allow_html=True)
         st.write("Insights to route-specific review patterns and satisfaction levels of airline customers.")
 
         st.markdown(
             """
             <div style="text-align: center;">
                 <iframe src="https://lookerstudio.google.com/embed/reporting/b5f009bf-6c85-41b0-b70e-af26d686eb68/page/G6bFF"
-                        width="1100" height="600" style="border:none;">
+                        width="1000" height="600" style="border:none;">
                 </iframe>
             </div>
             """,
             unsafe_allow_html=True
-        )
-
-        st.markdown(
-            "[Click here to view the Route Insights dashboard in a new tab.](https://lookerstudio.google.com/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF)"
         )
