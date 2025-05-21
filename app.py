@@ -121,6 +121,12 @@ if main_section == "Home":
                 Capturing the Voice of the Customer (VoC) through reviews helps airlines understand real experiences, from seat comfort to service quality.
                 Sentiment analysis turns this feedback into data-driven insights by detecting emotions and trends at scale. With this, airlines can enhance services, boost satisfaction, and stay ahead in a competitive market.
             </p>
+                This project utilizes a fine-tuned BERT model to automatically analyze customer reviews from airline passengers.
+                The goal is to predict the sentiment (positive or negative) of each review and extract insights into customer satisfaction levels.
+                Through interactive dashboards and real-time sentiment analysis, users can explore feedback trends and gain a deeper understanding
+                of what drives positive and negative customer experiences in the airline industry.
+            </p>
+            
         </div>
         """,
         unsafe_allow_html=True
