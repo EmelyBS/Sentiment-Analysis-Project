@@ -111,15 +111,10 @@ if main_section == "SA Interface":
     for idx, tab in enumerate(tabs):
         is_selected = (tab == st.session_state.active_tab)
         tab_class = "tab selected" if is_selected else "tab"
-        # Use markdown with clickable span (hacky workaround to keep tabs as text)
-        # But since Streamlit markdown is static, we use buttons instead with style removed
-        # So here, we use st.button but with style to look like text (better than markdown clicks)
+        # Use buttons to switch tabs
         with cols[idx]:
             if st.button(tab, key=f"tab_{tab}"):
                 st.session_state.active_tab = tab
-            # Re-render with color after click (button disables immediate UI change, so no problem)
-
-    # Add underline below tabs container (done by CSS border)
 
     # Content for each tab
     if st.session_state.active_tab == "Sentiment Exploration":
@@ -199,6 +194,9 @@ elif main_section == "BI Dashboards":
     dashboard_page = st.sidebar.radio("Select a BI Dashboard", ["Sentiment Trends", "Route Insights"])
 
     if dashboard_page == "Sentiment Trends":
+        # Show breadcrumbs at top-left for BI Dashboards > Sentiment Trends
+        show_breadcrumbs(["Home", "BI Dashboards", "Sentiment Trends"])
+
         st.title("BI Dashboard: Sentiment Trends")
         st.write("Insights on sentiment and customer experience metrics. An Overview on sentiment trends over time.")
 
@@ -219,8 +217,12 @@ elif main_section == "BI Dashboards":
         )
 
     elif dashboard_page == "Route Insights":
+        # Show breadcrumbs at top-left for BI Dashboards > Route Insights
+        show_breadcrumbs(["Home", "BI Dashboards", "Route Insights"])
+
         st.title("BI Dashboard: Route Insights")
         st.write("Insights to route-specific review patterns and satisfaction levels of airline customers.")
+
         st.markdown(
             """
             <div style="text-align: center;">
