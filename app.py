@@ -221,7 +221,10 @@ elif main_section == "Sentiment Analysis Simulator":
 
 # --- BUSINESS INTELLIGENCE DASHBOARDS ---
 elif main_section == "Business Intelligence Dashboards":
-    dashboard_page = st.sidebar.radio("Select a BI Dashboard", ["Sentiment Trends", "Route Insights"])
+    dashboard_page = st.sidebar.radio(
+        "Select a BI Dashboard",
+        ["Sentiment Trends", "Route Insights", "Traveller Type Analysis"]
+    )
 
     if dashboard_page == "Sentiment Trends":
         show_breadcrumbs(["Home", "Business Intelligence Dashboards", "Sentiment Trends"])
@@ -240,6 +243,24 @@ elif main_section == "Business Intelligence Dashboards":
             """,
             unsafe_allow_html=True
         )
+
+    elif dashboard_page == "Traveller Type Analysis":
+        show_breadcrumbs(["Home", "Business Intelligence Dashboards", "Traveller Type Analysis"])
+
+        st.markdown("<h2>Traveller Type Analysis</h2>", unsafe_allow_html=True)
+        st.write("Analysis of sentiment and satisfaction based on traveller types (e.g., business, leisure).")
+
+        st.markdown(
+            """
+            <div style="text-align: center;">
+                <iframe src="https://lookerstudio.google.com/embed/reporting/bbde1870-b31b-4b0b-926b-f28f040ae8e2/page/SZgIF"
+                        width="1000" height="600" style="border:none;">
+                </iframe>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
 
     elif dashboard_page == "Route Insights":
         show_breadcrumbs(["Home", "Business Intelligence Dashboards", "Route Insights"])
