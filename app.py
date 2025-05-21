@@ -4,108 +4,104 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import pandas as pd
 import base64
 
-# Set page config
-st.set_page_config(layout="wide", page_title="Sentiment Dashboard")
+# Page config
+st.set_page_config(layout="wide", page_title="Sentiment Analysis App")
 
-# Load model
+# Load model and tokenizer
 model_repo = "emelybs/Sentiment_Analysis_Project_BA"
 tokenizer = AutoTokenizer.from_pretrained(model_repo)
 model = AutoModelForSequenceClassification.from_pretrained(model_repo, revision="main", use_safetensors=True)
 
-# Init session state
+# Session state
 if "section" not in st.session_state:
     st.session_state.section = "SA Interface"
 if "sub_section" not in st.session_state:
     st.session_state.sub_section = "Exploration"
+if "history" not in st.session_state:
+    st.session_state.history = []
 
-# Styling
+# --- Style ---
 st.markdown("""
     <style>
         body {
-            background-color: #f0f4f8;
+            background-color: #eef3fa;
         }
-        .sidebar-title {
-            font-weight: bold;
-            font-size: 20px;
-            margin-bottom: 10px;
-        }
-        .nav-link {
-            color: #1f3b73;
-            font-size: 18px;
-            margin: 5px 0;
+        .nav-link, .sub-link {
             cursor: pointer;
+            padding: 6px 10px;
+            margin: 4px 0;
+            border-radius: 5px;
         }
-        .nav-link:hover {
-            color: #4da8da;
+        .nav-link:hover, .sub-link:hover {
+            background-color: #dce6f7;
         }
         .nav-active {
-            color: #4da8da;
+            background-color: #1f3b73;
+            color: white !important;
             font-weight: bold;
         }
         .sub-link {
             margin-left: 15px;
-            font-size: 16px;
-            color: #24427c;
-            cursor: pointer;
-        }
-        .sub-link:hover {
-            color: #4da8da;
+            font-size: 15px;
+            color: #1f3b73;
         }
         .sub-active {
-            color: #4da8da;
-            font-weight: bold;
+            background-color: #4da8da;
+            color: white !important;
+        }
+        .center-button > div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .stButton>button {
+            background-color: #003366;
+            color: white;
+            font-size: 16px;
+            padding: 8px 20px;
+            border-radius: 5px;
+        }
+        .main-title {
+            margin-top: -30px;
+            padding-top: 10px;
         }
     </style>
 """, unsafe_allow_html=True)
 
-# Sidebar navigation
-st.sidebar.markdown('<div class="sidebar-title">Navigation</div>', unsafe_allow_html=True)
+# Sidebar Navigation
+st.sidebar.markdown("## Navigation")
 
-def nav_link(name):
-    css_class = "nav-link"
-    if st.session_state.section == name:
-        css_class += " nav-active"
-    return st.sidebar.markdown(f'<div class="{css_class}" onclick="window.location.href=\'#{name}\'">{name}</div>', unsafe_allow_html=True)
+def nav_click(label, section=None, sub_section=None, is_sub=False):
+    clicked = False
+    if st.sidebar.button(label, key=label):
+        if section:
+            st.session_state.section = section
+        if sub_section:
+            st.session_state.sub_section = sub_section
+        clicked = True
+    return clicked
 
-def sub_link(name, parent):
-    if st.session_state.section != parent:
-        return
-    css_class = "sub-link"
-    if st.session_state.sub_section == name:
-        css_class += " sub-active"
-    return st.sidebar.markdown(f'<div class="{css_class}" onclick="window.location.href=\'#{name}\'">{name}</div>', unsafe_allow_html=True)
+# Navigation UI logic
+if nav_click("SA Interface", section="SA Interface"):
+    st.session_state.sub_section = "Exploration"
+if st.session_state.section == "SA Interface":
+    nav_click("• Exploration", section="SA Interface", sub_section="Exploration", is_sub=True)
+    nav_click("• History", section="SA Interface", sub_section="History", is_sub=True)
+    nav_click("• Review Analysis", section="SA Interface", sub_section="Review Analysis", is_sub=True)
 
-nav_link("SA Interface")
-sub_link("Exploration", "SA Interface")
-sub_link("History", "SA Interface")
-sub_link("Review Analysis", "SA Interface")
+if nav_click("BI Dashboards", section="BI Dashboards"):
+    st.session_state.sub_section = "Sentiment Trends"
+if st.session_state.section == "BI Dashboards":
+    nav_click("• Sentiment Trends", section="BI Dashboards", sub_section="Sentiment Trends", is_sub=True)
+    nav_click("• Route Insights", section="BI Dashboards", sub_section="Route Insights", is_sub=True)
 
-nav_link("BI Dashboards")
-sub_link("Sentiment Trends", "BI Dashboards")
-sub_link("Route Insights", "BI Dashboards")
+# Main content area
+st.markdown(f"<h2 class='main-title'>{st.session_state.sub_section}</h2>", unsafe_allow_html=True)
 
-# Handle hash-based navigation (simulate clicks)
-js = """
-<script>
-const sections = ["SA Interface", "BI Dashboards"];
-const subSections = ["Exploration", "History", "Review Analysis", "Sentiment Trends", "Route Insights"];
-window.addEventListener("hashchange", function() {
-    const hash = decodeURIComponent(window.location.hash.substring(1));
-    if (sections.includes(hash)) {
-        window.parent.postMessage({type: 'streamlit:setComponentValue', key: 'section', value: hash}, '*');
-    } else if (subSections.includes(hash)) {
-        window.parent.postMessage({type: 'streamlit:setComponentValue', key: 'sub_section', value: hash}, '*');
-    }
-});
-</script>
-"""
-st.components.v1.html(js)
-
-# -------- Content --------
-st.title(st.session_state.sub_section)
+# --- Pages ---
 
 if st.session_state.sub_section == "Exploration":
-    st.markdown("<h4 style='text-align:center; color:#1f3b73;'>Sentiment Analysis on Airline Reviews</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color:#1f3b73;'>Sentiment Analysis on Airline Reviews</h4>", unsafe_allow_html=True)
     encoded_image = base64.b64encode(open("SA_new.jpg", "rb").read()).decode()
     st.markdown(
         f"""
@@ -115,31 +111,41 @@ if st.session_state.sub_section == "Exploration":
         <p style="text-align:center; font-size:14px;">Image created by Yarin Horev using Ideogram, March 3, 2025.</p>
         """, unsafe_allow_html=True)
 
-    review = st.text_area("Enter your review:")
-    if st.button("Analyze"):
-        if review.strip():
-            inputs = tokenizer(review, return_tensors="pt", truncation=True, padding=True)
-            outputs = model(**inputs)
-            probs = torch.nn.functional.softmax(outputs.logits, dim=-1)
-            sentiment = torch.argmax(outputs.logits, dim=-1).item()
-            label = "Positive 😊" if sentiment == 1 else "Negative 😞"
-            score = probs[0, 1].item()
-            color = "#66cc66" if sentiment == 1 else "#ff6666"
-            st.markdown(f"""
-                <div style="background-color:{color}; padding: 10px; border-radius: 5px; color: white; text-align: center;">
-                    <h4>{label} (Score: {score:.2f})</h4>
-                </div>
-            """, unsafe_allow_html=True)
-        else:
-            st.warning("Please enter a review.")
+    user_input = st.text_area("Enter your review here:")
+
+    with st.container():
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            if st.button("Analyze Sentiment"):
+                if user_input:
+                    inputs = tokenizer(user_input, return_tensors="pt", truncation=True, padding=True)
+                    outputs = model(**inputs)
+                    probs = torch.nn.functional.softmax(outputs.logits, dim=-1)
+                    sentiment = torch.argmax(outputs.logits, dim=-1).item()
+                    score = probs[0, 1].item()
+                    label = "Positive 😊" if sentiment == 1 else "Negative 😞"
+                    color = "#66cc66" if sentiment == 1 else "#ff6666"
+                    st.markdown(f"""
+                        <div style="background-color:{color}; padding: 10px; border-radius: 5px; color: white; text-align: center;">
+                            <h4>{label} (Score: {score:.2f})</h4>
+                        </div>
+                    """, unsafe_allow_html=True)
+
+                    st.session_state.history.append({
+                        "Review": user_input,
+                        "Sentiment": label,
+                        "Score": score
+                    })
+                else:
+                    st.warning("Please enter a review.")
 
 elif st.session_state.sub_section == "History":
     st.subheader("Review History")
-    if "history" in st.session_state:
+    if st.session_state.history:
         df = pd.DataFrame(st.session_state.history)
         st.dataframe(df)
     else:
-        st.info("No history yet.")
+        st.info("No reviews analyzed yet.")
 
 elif st.session_state.sub_section == "Review Analysis":
     st.subheader("Review Analysis")
@@ -147,7 +153,7 @@ elif st.session_state.sub_section == "Review Analysis":
     st.markdown(
         """
         <div style="text-align:center;">
-            <iframe width="1200" height="600" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
+            <iframe width="1100" height="600" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
                 frameborder="0" style="border:0;" allowfullscreen></iframe>
         </div>
         """, unsafe_allow_html=True
@@ -159,7 +165,7 @@ elif st.session_state.sub_section == "Sentiment Trends":
     st.markdown(
         """
         <div style="text-align:center;">
-            <iframe width="1200" height="600" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
+            <iframe width="1100" height="600" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
                 frameborder="0" style="border:0;" allowfullscreen></iframe>
         </div>
         """, unsafe_allow_html=True
@@ -171,7 +177,7 @@ elif st.session_state.sub_section == "Route Insights":
     st.markdown(
         """
         <div style="text-align:center;">
-            <iframe width="1200" height="600" src="https://lookerstudio.google.com/embed/reporting/b5f009bf-6c85-41b0-b70e-af26d686eb68/page/G6bFF"
+            <iframe width="1100" height="600" src="https://lookerstudio.google.com/embed/reporting/b5f009bf-6c85-41b0-b70e-af26d686eb68/page/G6bFF"
                 frameborder="0" style="border:0;" allowfullscreen></iframe>
         </div>
         """, unsafe_allow_html=True
