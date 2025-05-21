@@ -197,7 +197,7 @@ elif main_section == "BI Dashboards":
         # Show breadcrumbs at top-left for BI Dashboards > Sentiment Trends
         show_breadcrumbs(["Home", "BI Dashboards", "Sentiment Trends"])
 
-        st.title("BI Dashboard: Sentiment Trends")
+        st.title("Sentiment Trends")
         st.write("Insights on sentiment and customer experience metrics. An Overview on sentiment trends over time.")
 
         st.markdown(
@@ -220,7 +220,7 @@ elif main_section == "BI Dashboards":
         # Show breadcrumbs at top-left for BI Dashboards > Route Insights
         show_breadcrumbs(["Home", "BI Dashboards", "Route Insights"])
 
-        st.title("BI Dashboard: Route Insights")
+        st.title("Route Insights")
         st.write("Insights to route-specific review patterns and satisfaction levels of airline customers.")
 
         st.markdown(
