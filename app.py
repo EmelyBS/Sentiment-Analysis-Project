@@ -260,11 +260,16 @@ if main_section == "SA Interface":
             return base64.b64encode(data).decode()
 
         encoded_image = get_base64_image("SA_new.jpg")
-
         st.markdown(
             f"""
             <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
                 <img src="data:image/jpg;base64,{encoded_image}" style="width: 80%; max-width: 1000px; border-radius: 10px;" />
             </div>
-            <div style="display: flex; justify-content: center; align-items: center; width: 100%;">
-                <p style="font-size: 14px; margin: 0
+            <div style="display: flex; justify-content: center; align-items: center; width: 100%; margin-bottom: 30px;">
+                <p style="font-size: 16px; max-width: 900px; text-align: center; color: #0b47a1;">
+                    Here you can see the different opinions and their sentiment.
+                </p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
