@@ -80,7 +80,7 @@ except Exception as e:
 
 # Sidebar navigation
 st.sidebar.title("Navigation")
-main_section = st.sidebar.radio("Choose Section", ["SA Interface", "BI Dashboards"])
+main_section = st.sidebar.radio("Choose Section", ["HOME", "SA Interface", "BI Dashboards"])
 
 # Helper function to get base64 image
 def get_base64_image(image_path):
@@ -97,7 +97,36 @@ def sentiment_analyzer(text):
     prediction = torch.argmax(outputs.logits, dim=-1).item()
     return prediction, positive_score
 
-if main_section == "SA Interface":
+# ---------- HOME ----------
+if main_section == "HOME":
+    show_breadcrumbs(["Home"])
+
+    st.markdown("<h2>Sentiment Analysis Web App</h2>", unsafe_allow_html=True)
+
+    encoded_image = get_base64_image("SA_new.jpg")
+    st.markdown(
+        f"""
+        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
+            <img src="data:image/jpg;base64,{encoded_image}" style="width: 80%; max-width: 1000px; border-radius: 10px;" />
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        """
+        <div style="text-align: justify; font-size: 16px; margin-top: 20px;">
+           What are your passengers really thinking? 
+           In the fast-paced aviation industry, customer reviews are more than just opinions—they're insights.
+           Capturing the Voice of the Customer (VoC) through reviews helps airlines understand real experiences, from seat comfort to service quality.
+           Sentiment analysis turns this feedback into data-driven insights by detecting emotions and trends at scale. With this, airlines can enhance services, boost satisfaction, and stay ahead in a competitive market.
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+# ---------- SA INTERFACE ----------
+elif main_section == "SA Interface":
     tabs = ["Sentiment Exploration", "Review History", "Review Analysis"]
     if "active_tab" not in st.session_state:
         st.session_state.active_tab = "Sentiment Exploration"
@@ -182,6 +211,7 @@ if main_section == "SA Interface":
             unsafe_allow_html=True
         )
 
+# ---------- BI DASHBOARDS ----------
 elif main_section == "BI Dashboards":
     dashboard_page = st.sidebar.radio("Select a BI Dashboard", ["Sentiment Trends", "Route Insights"])
 
