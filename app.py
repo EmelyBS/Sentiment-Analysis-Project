@@ -103,7 +103,7 @@ if main_section == "Home":
 
     st.markdown("<h2>Voice of the Customer in Aviation</h2>", unsafe_allow_html=True)
 
-    encoded_image = get_base64_image("Home_pic.jpg")
+    encoded_image = get_base64_image("new_home_pic.jpg")
     st.markdown(
         f"""
         <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
@@ -116,7 +116,7 @@ if main_section == "Home":
         </div>
         <div style="text-align: center; font-size: 16px; max-width: 900px; margin: 0 auto;">
             <p>
-                **What are your passengers really thinking?**
+                What are your passengers really thinking?
             <p>
                 In the fast-paced aviation industry, customer reviews are more than just opinions—they're insights.
                 Capturing the Voice of the Customer (VoC) through reviews helps airlines understand real experiences, from seat comfort to service quality.
