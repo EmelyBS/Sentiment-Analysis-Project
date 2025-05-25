@@ -121,14 +121,11 @@ if main_section == "Home":
 
         In the fast-paced aviation industry, customer reviews are more than just opinions—they're insights.
         Capturing the Voice of the Customer (VoC) through reviews helps airlines understand real experiences,
-        from seat comfort to service quality.
-
-        Sentiment analysis turns this feedback into data-driven insights by detecting emotions and trends at scale.
+        from seat comfort to service quality. Sentiment analysis turns this feedback into data-driven insights by detecting emotions and trends at scale.
         With this, airlines can enhance services, boost satisfaction, and stay ahead in a competitive market.
 
         This project utilizes a fine-tuned BERT model to automatically analyze customer reviews from airline passengers.
         The goal is to predict the sentiment (positive or negative) of each review and extract insights into customer satisfaction levels.
-
         Through interactive dashboards and real-time sentiment analysis, users can explore feedback trends and gain a deeper understanding
         of what drives positive and negative customer experiences in the airline industry.
     """)
@@ -218,10 +215,9 @@ elif main_section == "Cubes":
         unsafe_allow_html=True
     )
     st.write("""
-    The Cube above represents the different Dimensions we used for representing the BI Dashboards.
-    As part of the Hierarchy we used Service Categories which are the different Indexes which the customer rated by their experience.
-    The Service Categories include: Seat Comfort, Wifi Connectivity, Ground Service, Food & Beverage, Cabin Staff Service, Inflight Entertainment, and Value For Money.
-    Those indexes have a rating from 1 to 5. The overall Rating called Overall Rating has a rating range from 1 to 9.
+    The Cube above visualizes the key Dimensions used in our Business Intelligence Dashboards.
+    At the core of the hierarchy are Service Categories, which represent the specific aspects of the customer experience that were rated. These categories include: Seat Comfort, Wifi Connectivity, Ground Service, Food & Beverage, Cabin Staff Service, Inflight Entertainment, and Value for Money.
+    Each of these indexes is rated on a scale from 1 to 5. Additionally, there is an Overall Rating that reflects the customer's general satisfaction, rated on a scale from 1 to 9.
     """)
 
 # --- BUSINESS INTELLIGENCE DASHBOARDS ---
