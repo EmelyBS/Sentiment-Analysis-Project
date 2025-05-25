@@ -120,9 +120,9 @@ if main_section == "Home":
         unsafe_allow_html=True
     )
 
-    st.write("**What are your passengers really thinking?**")
-    st.write(
-        """
+    st.write("""
+        **What are your passengers really thinking?**
+
         In the fast-paced aviation industry, customer reviews are more than just opinions—they're insights.
         Capturing the Voice of the Customer (VoC) through reviews helps airlines understand real experiences,
         from seat comfort to service quality.
@@ -135,8 +135,8 @@ if main_section == "Home":
 
         Through interactive dashboards and real-time sentiment analysis, users can explore feedback trends and gain a deeper understanding
         of what drives positive and negative customer experiences in the airline industry.
-        """
-    )
+    """)
+
 
 # --- SENTIMENT ANALYSIS SIMULATOR ---
 elif main_section == "Sentiment Analysis Simulator":
@@ -212,14 +212,13 @@ elif main_section == "Sentiment Analysis Simulator":
 elif main_section == "Business Intelligence Dashboards":
     dashboard_page = st.sidebar.radio(
         "Select a BI Dashboard",
-        ["Sentiment Trends", "Route Insights", "Traveller Type Analysis"]
+        ["Sentiment Trends", "Route Insights", "Traveller Type Analysis", "Cubes"]
     )
 
     if dashboard_page == "Sentiment Trends":
         show_breadcrumbs(["Home", "Business Intelligence Dashboards", "Sentiment Trends"])
 
         st.markdown("<h2>Sentiment Trends</h2>", unsafe_allow_html=True)
-
         st.markdown(
             """
             <div style="text-align: center;">
@@ -237,7 +236,6 @@ elif main_section == "Business Intelligence Dashboards":
         show_breadcrumbs(["Home", "Business Intelligence Dashboards", "Traveller Type Analysis"])
 
         st.markdown("<h2>Traveller Type Analysis</h2>", unsafe_allow_html=True)
-
         st.markdown(
             """
             <div style="text-align: center;">
@@ -254,7 +252,6 @@ elif main_section == "Business Intelligence Dashboards":
         show_breadcrumbs(["Home", "Business Intelligence Dashboards", "Route Insights"])
 
         st.markdown("<h2>Route Insights</h2>", unsafe_allow_html=True)
-
         st.markdown(
             """
             <div style="text-align: center;">
@@ -266,3 +263,24 @@ elif main_section == "Business Intelligence Dashboards":
             unsafe_allow_html=True
         )
         st.write("Insights to route-specific review patterns and satisfaction levels of airline customers.")
+
+    elif dashboard_page == "Cubes":
+        show_breadcrumbs(["Home", "Business Intelligence Dashboards", "Cubes"])
+
+        st.markdown("<h2>Cubes</h2>", unsafe_allow_html=True)
+        st.markdown(
+            """
+            <div style="text-align: center;">
+                <iframe src="https://lookerstudio.google.com/embed/reporting/2d9ea746-16e6-45fa-bb99-a524bd0ca2b7/page/EM0FF"
+                        width="1000" height="600" style="border:none;">
+                </iframe>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        st.write("""
+        The Cube above represents the different Dimensions we used for representing the BI Dashboards.
+        As part of the Hierarchy we used Service Categories which are the different Indexes which the customer rated by their experience.
+        The Service Categories include: Seat Comfort, Wifi Connectivity, Ground Service, Food & Beverage, Cabin Staff Service, Inflight Entertainment, and Value For Money.
+        Those indexes have a rating from 1 to 5. The overall Rating called Overall Rating has a rating range from 1 to 9.
+        """)
