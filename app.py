@@ -135,7 +135,7 @@ if main_section == "Home":
 
 # --- SENTIMENT ANALYSIS SIMULATOR ---
 elif main_section == "Sentiment Analysis Simulator":
-    tabs = ["Sentiment Exploration", "Review History", "Review Analysis"]
+    tabs = ["Sentiment Exploration", "Review History"]
     if "active_tab" not in st.session_state:
         st.session_state.active_tab = "Sentiment Exploration"
 
@@ -202,22 +202,6 @@ elif main_section == "Sentiment Analysis Simulator":
             if "Score" in history_df.columns:
                 history_df = history_df[["Review", "Sentiment", "Score"]]
             st.dataframe(history_df)
-
-    elif st.session_state.active_tab == "Review Analysis":
-        st.markdown("<h2>Review Analysis</h2>", unsafe_allow_html=True)
-        st.markdown("<p style='text-align:center;'>Here you can see the different opinions and their sentiment.</p>", unsafe_allow_html=True)
-
-        st.markdown(
-            """
-            <div style="text-align: center;">
-                <iframe width="1000" height="600" src="https://lookerstudio.google.com/embed/reporting/6fceb918-2963-4f1e-ba45-5ac5bd7891bf/page/MtqHF"
-                        frameborder="0" style="border:0;" allowfullscreen 
-                        sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
-                </iframe>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
 
 # --- BUSINESS INTELLIGENCE DASHBOARDS ---
 elif main_section == "Business Intelligence Dashboards":
