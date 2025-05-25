@@ -116,35 +116,27 @@ if main_section == "Home":
                 Image created by Yarin Horev using Ideogram (AI system by OpenAI), Date: March 3, 2025.
             </p>
         </div>
-
-        <div style="text-align: center; font-size: 16px; max-width: 900px; margin: 0 auto;">
-            <p><strong>What are your passengers really thinking?</strong></p>
-
-            <p>
-                In the fast-paced aviation industry, customer reviews are more than just opinions—they're insights.
-                Capturing the Voice of the Customer (VoC) through reviews helps airlines understand real experiences,
-                from seat comfort to service quality.
-            </p>
-
-            <p>
-                Sentiment analysis turns this feedback into data-driven insights by detecting emotions and trends at scale.
-                With this, airlines can enhance services, boost satisfaction, and stay ahead in a competitive market.
-            </p>
-
-            <p>
-                This project utilizes a fine-tuned BERT model to automatically analyze customer reviews from airline passengers.
-                The goal is to predict the sentiment (positive or negative) of each review and extract insights into customer satisfaction levels.
-            </p>
-
-            <p>
-                Through interactive dashboards and real-time sentiment analysis, users can explore feedback trends and gain a deeper understanding
-                of what drives positive and negative customer experiences in the airline industry.
-            </p>
-        </div>
         """,
         unsafe_allow_html=True
     )
 
+    st.write("**What are your passengers really thinking?**")
+    st.write(
+        """
+        In the fast-paced aviation industry, customer reviews are more than just opinions—they're insights.
+        Capturing the Voice of the Customer (VoC) through reviews helps airlines understand real experiences,
+        from seat comfort to service quality.
+
+        Sentiment analysis turns this feedback into data-driven insights by detecting emotions and trends at scale.
+        With this, airlines can enhance services, boost satisfaction, and stay ahead in a competitive market.
+
+        This project utilizes a fine-tuned BERT model to automatically analyze customer reviews from airline passengers.
+        The goal is to predict the sentiment (positive or negative) of each review and extract insights into customer satisfaction levels.
+
+        Through interactive dashboards and real-time sentiment analysis, users can explore feedback trends and gain a deeper understanding
+        of what drives positive and negative customer experiences in the airline industry.
+        """
+    )
 
 # --- SENTIMENT ANALYSIS SIMULATOR ---
 elif main_section == "Sentiment Analysis Simulator":
@@ -227,7 +219,6 @@ elif main_section == "Business Intelligence Dashboards":
         show_breadcrumbs(["Home", "Business Intelligence Dashboards", "Sentiment Trends"])
 
         st.markdown("<h2>Sentiment Trends</h2>", unsafe_allow_html=True)
-        st.write("Insights on sentiment and customer experience metrics. An overview on sentiment trends over time.")
 
         st.markdown(
             """
@@ -240,12 +231,12 @@ elif main_section == "Business Intelligence Dashboards":
             """,
             unsafe_allow_html=True
         )
+        st.write("Insights on sentiment and customer experience metrics. An overview on sentiment trends over time.")
 
     elif dashboard_page == "Traveller Type Analysis":
         show_breadcrumbs(["Home", "Business Intelligence Dashboards", "Traveller Type Analysis"])
 
         st.markdown("<h2>Traveller Type Analysis</h2>", unsafe_allow_html=True)
-        st.write("Analysis of sentiment and satisfaction based on traveller types (e.g., business, leisure).")
 
         st.markdown(
             """
@@ -257,13 +248,12 @@ elif main_section == "Business Intelligence Dashboards":
             """,
             unsafe_allow_html=True
         )
-
+        st.write("Analysis of sentiment and satisfaction based on traveller types (e.g., business, leisure).")
 
     elif dashboard_page == "Route Insights":
         show_breadcrumbs(["Home", "Business Intelligence Dashboards", "Route Insights"])
 
         st.markdown("<h2>Route Insights</h2>", unsafe_allow_html=True)
-        st.write("Insights to route-specific review patterns and satisfaction levels of airline customers.")
 
         st.markdown(
             """
@@ -275,3 +265,4 @@ elif main_section == "Business Intelligence Dashboards":
             """,
             unsafe_allow_html=True
         )
+        st.write("Insights to route-specific review patterns and satisfaction levels of airline customers.")
