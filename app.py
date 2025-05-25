@@ -4,7 +4,6 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import pandas as pd
 import base64
 
-# Set wide layout and force sidebar to be expanded
 st.set_page_config(layout="wide", initial_sidebar_state="expanded")
 
 # CSS styles
@@ -66,7 +65,6 @@ def show_breadcrumbs(items):
     )
     st.markdown(f"<div style='position: relative;'>{breadcrumb_html}</div>", unsafe_allow_html=True)
 
-# Load model and tokenizer from Hugging Face Hub
 model_repo = "emelybs/Sentiment_Analysis_Project_BA"
 
 try:
@@ -78,17 +76,15 @@ except Exception as e:
     st.error(f"Error loading model: {e}")
     st.stop()
 
-# Sidebar navigation
+# 🟦 Main Sidebar Navigation (Cubes now added in the same level)
 st.sidebar.title("Navigation")
-main_section = st.sidebar.radio("Choose Section", ["Home", "Sentiment Analysis Simulator", "Business Intelligence Dashboards"])
+main_section = st.sidebar.radio("Choose Section", ["Home", "Sentiment Analysis Simulator", "Cubes", "Business Intelligence Dashboards"])
 
-# Helper function to get base64 image
 def get_base64_image(image_path):
     with open(image_path, "rb") as f:
         data = f.read()
     return base64.b64encode(data).decode()
 
-# Sentiment analyzer function
 def sentiment_analyzer(text):
     inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True)
     outputs = model(**inputs)
@@ -136,7 +132,6 @@ if main_section == "Home":
         Through interactive dashboards and real-time sentiment analysis, users can explore feedback trends and gain a deeper understanding
         of what drives positive and negative customer experiences in the airline industry.
     """)
-
 
 # --- SENTIMENT ANALYSIS SIMULATOR ---
 elif main_section == "Sentiment Analysis Simulator":
@@ -208,11 +203,32 @@ elif main_section == "Sentiment Analysis Simulator":
                 history_df = history_df[["Review", "Sentiment", "Score"]]
             st.dataframe(history_df)
 
+# --- CUBES ---
+elif main_section == "Cubes":
+    show_breadcrumbs(["Home", "Cubes"])
+    st.markdown("<h2>Cubes</h2>", unsafe_allow_html=True)
+    st.markdown(
+        """
+        <div style="text-align: center;">
+            <iframe src="https://lookerstudio.google.com/embed/reporting/2d9ea746-16e6-45fa-bb99-a524bd0ca2b7/page/EM0FF"
+                    width="1000" height="600" style="border:none;">
+            </iframe>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    st.write("""
+    The Cube above represents the different Dimensions we used for representing the BI Dashboards.
+    As part of the Hierarchy we used Service Categories which are the different Indexes which the customer rated by their experience.
+    The Service Categories include: Seat Comfort, Wifi Connectivity, Ground Service, Food & Beverage, Cabin Staff Service, Inflight Entertainment, and Value For Money.
+    Those indexes have a rating from 1 to 5. The overall Rating called Overall Rating has a rating range from 1 to 9.
+    """)
+
 # --- BUSINESS INTELLIGENCE DASHBOARDS ---
 elif main_section == "Business Intelligence Dashboards":
     dashboard_page = st.sidebar.radio(
         "Select a BI Dashboard",
-        ["Sentiment Trends", "Route Insights", "Traveller Type Analysis", "Cubes"]
+        ["Sentiment Trends", "Route Insights", "Traveller Type Analysis"]
     )
 
     if dashboard_page == "Sentiment Trends":
@@ -263,24 +279,3 @@ elif main_section == "Business Intelligence Dashboards":
             unsafe_allow_html=True
         )
         st.write("Insights to route-specific review patterns and satisfaction levels of airline customers.")
-
-    elif dashboard_page == "Cubes":
-        show_breadcrumbs(["Home", "Business Intelligence Dashboards", "Cubes"])
-
-        st.markdown("<h2>Cubes</h2>", unsafe_allow_html=True)
-        st.markdown(
-            """
-            <div style="text-align: center;">
-                <iframe src="https://lookerstudio.google.com/embed/reporting/2d9ea746-16e6-45fa-bb99-a524bd0ca2b7/page/EM0FF"
-                        width="1000" height="600" style="border:none;">
-                </iframe>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-        st.write("""
-        The Cube above represents the different Dimensions we used for representing the BI Dashboards.
-        As part of the Hierarchy we used Service Categories which are the different Indexes which the customer rated by their experience.
-        The Service Categories include: Seat Comfort, Wifi Connectivity, Ground Service, Food & Beverage, Cabin Staff Service, Inflight Entertainment, and Value For Money.
-        Those indexes have a rating from 1 to 5. The overall Rating called Overall Rating has a rating range from 1 to 9.
-        """)
