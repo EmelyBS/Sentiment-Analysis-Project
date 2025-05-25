@@ -104,45 +104,46 @@ if main_section == "Home":
     st.markdown("<h2>Voice of the Customer in Aviation</h2>", unsafe_allow_html=True)
 
     encoded_image = get_base64_image("new_home_pic.jpg")
-st.markdown(
-    f"""
-    <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
-        <img src="data:image/jpg;base64,{encoded_image}" style="width: 80%; max-width: 1000px; border-radius: 10px;" />
-    </div>
 
-    <div style="display: flex; justify-content: center; align-items: center; width: 100%; margin-bottom: 15px;">
-        <p style="font-size: 14px; margin: 0;">
-            Image created by Yarin Horev using Ideogram (AI system by OpenAI), Date: March 3, 2025.
-        </p>
-    </div>
+    st.markdown(
+        f"""
+        <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
+            <img src="data:image/jpg;base64,{encoded_image}" style="width: 80%; max-width: 1000px; border-radius: 10px;" />
+        </div>
 
-    <div style="text-align: center; font-size: 16px; max-width: 900px; margin: 0 auto;">
-        <p><strong>What are your passengers really thinking?</strong></p>
+        <div style="display: flex; justify-content: center; align-items: center; width: 100%; margin-bottom: 15px;">
+            <p style="font-size: 14px; margin: 0;">
+                Image created by Yarin Horev using Ideogram (AI system by OpenAI), Date: March 3, 2025.
+            </p>
+        </div>
 
-        <p>
-            In the fast-paced aviation industry, customer reviews are more than just opinions—they're insights.
-            Capturing the Voice of the Customer (VoC) through reviews helps airlines understand real experiences,
-            from seat comfort to service quality.
-        </p>
+        <div style="text-align: center; font-size: 16px; max-width: 900px; margin: 0 auto;">
+            <p><strong>What are your passengers really thinking?</strong></p>
 
-        <p>
-            Sentiment analysis turns this feedback into data-driven insights by detecting emotions and trends at scale.
-            With this, airlines can enhance services, boost satisfaction, and stay ahead in a competitive market.
-        </p>
+            <p>
+                In the fast-paced aviation industry, customer reviews are more than just opinions—they're insights.
+                Capturing the Voice of the Customer (VoC) through reviews helps airlines understand real experiences,
+                from seat comfort to service quality.
+            </p>
 
-        <p>
-            This project utilizes a fine-tuned BERT model to automatically analyze customer reviews from airline passengers.
-            The goal is to predict the sentiment (positive or negative) of each review and extract insights into customer satisfaction levels.
-        </p>
+            <p>
+                Sentiment analysis turns this feedback into data-driven insights by detecting emotions and trends at scale.
+                With this, airlines can enhance services, boost satisfaction, and stay ahead in a competitive market.
+            </p>
 
-        <p>
-            Through interactive dashboards and real-time sentiment analysis, users can explore feedback trends and gain a deeper understanding
-            of what drives positive and negative customer experiences in the airline industry.
-        </p>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+            <p>
+                This project utilizes a fine-tuned BERT model to automatically analyze customer reviews from airline passengers.
+                The goal is to predict the sentiment (positive or negative) of each review and extract insights into customer satisfaction levels.
+            </p>
+
+            <p>
+                Through interactive dashboards and real-time sentiment analysis, users can explore feedback trends and gain a deeper understanding
+                of what drives positive and negative customer experiences in the airline industry.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 
 # --- SENTIMENT ANALYSIS SIMULATOR ---
