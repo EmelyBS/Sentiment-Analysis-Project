@@ -15,7 +15,8 @@ The data was sourced from [Skytrax](https://www.airlinequality.com/), containing
 - Cabin Staff Service  
 - Food & Beverages  
 - Inflight Entertainment  
-- Wifi Connectivity  
+- Wifi Connectivity
+- Ground Service 
 - Value for Money  
 - Overall Rating  
 
