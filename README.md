@@ -4,6 +4,7 @@
 This project explores the application of sentiment analysis on verified airline reviews collected from Skytrax. The aim is to uncover customer sentiment trends and determine key drivers of satisfaction or dissatisfaction, using a range of machine learning and deep learning techniques.
 
 ![Sentiment Analysis Project Pipeline](diagram-export-5-4-2025-7_14_23-PM.png)  
+[View on Eraser![](https://app.eraser.io/workspace/z48nJv0aMvHimOS8FYfM/preview)](https://app.eraser.io/workspace/z48nJv0aMvHimOS8FYfM)
 *A visual overview of the sentiment analysis pipeline. Created by Emely Ben-Sadon using Eraser.io (an AI tool); April 5, 2025.*
 
 This diagram illustrates a Sentiment Analysis Pipeline with two model paths: BERT (in blue) and Naive Bayes (in green). It starts with Data Preparation and Preprocessing, flows through a Model Selection Step, then splits into either a Deep Learning Workflow with BERT or a classical Machine Learning Workflow with Naive Bayes. Each path includes Training and Evaluation Steps, ending with Performance Metrics and Final Predictions.
