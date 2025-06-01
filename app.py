@@ -3,6 +3,7 @@ import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import pandas as pd
 import base64
+import os # Import the os module for path manipulation
 
 st.set_page_config(layout="wide", initial_sidebar_state="expanded")
 
@@ -54,6 +55,34 @@ st.markdown(
             text-align: center;
             margin-bottom: 20px;
         }
+
+        .stDownloadButton>button {
+        background-color: #003366;
+        color: white;
+        font-size: 16px;
+        border-radius: 5px;
+        width: 100%;
+        display: block;
+        margin: 0 auto;
+        }
+        
+        /* Fix sidebar (nav) to left, full height */
+        .css-1d391kg {  /* Streamlit's sidebar container class - might need update if Streamlit changes */
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 280px;
+            overflow-y: auto; /* scroll inside if content is tall */
+            z-index: 100; /* on top */
+            background-color: #f0f2f6; /* or your preferred background */
+        }
+
+        /* Add margin to main content to not go under sidebar */
+        .css-1d391kg ~ .css-1v3fvcr {  /* Main content container */
+            margin-left: 300px; /* should be slightly larger than sidebar width */
+        }
+
     </style>
     """,
     unsafe_allow_html=True,
@@ -109,7 +138,8 @@ if main_section == "HOME":
             With this, airlines can enhance services, boost satisfaction, and stay ahead in a competitive market.</p>
         </div>
         """, unsafe_allow_html=True)
-    encoded_image = get_base64_image("new_home_pic.jpg")
+    # CHANGED: Image path now includes the 'picture' folder
+    encoded_image = get_base64_image(os.path.join("picture", "new_home_pic.jpg")) 
 
     st.markdown(
         f"""
@@ -125,17 +155,15 @@ if main_section == "HOME":
     )
 
     st.write("""
-       
+        
         
     """)
 
     st.markdown("""
         <div style="text-align: center; max-width: 700px; margin: auto; font-size: 18px;">
             <p>
-            This project utilizes a fine-tuned BERT model to automatically analyze customer reviews from airline passengers.
-            The goal is to predict the sentiment (positive or negative) of each review and extract insights into customer satisfaction levels.
-            Through interactive dashboards and real-time sentiment analysis, users can explore feedback trends and gain a deeper understanding
-            of what drives positive and negative customer experiences in the airline industry.
+            This project utilizes a fine-tuned BERT model to automatically analyze customer reviews from airline passengers. The goal is to predict the sentiment (positive or negative) of each review and extract insights into customer satisfaction levels.
+            Through interactive dashboards and real-time sentiment analysis, users can explore feedback trends and gain a deeper understanding of what drives positive and negative customer experiences in the airline industry.
             </p>
         </div>
     """, unsafe_allow_html=True)
@@ -143,12 +171,19 @@ if main_section == "HOME":
     # --- About the Data ---
     st.markdown("## About the Data")
 
-    # Kaggle button
-    if st.button("🔗 View Dataset on Kaggle"):
-        st.markdown(
-            '<meta http-equiv="refresh" content="0; url=https://www.kaggle.com/datasets/juhibhojani/airline-reviews/data?select=Airline_review.csv">',
-            unsafe_allow_html=True,
-        )
+    # Load the CSV file
+    df = pd.read_csv("Airline_review.csv")  # Make sure this filename matches your actual file
+
+    st.markdown('<div class="download-button-wrapper">', unsafe_allow_html=True)
+
+    st.download_button(
+        label="📥 Download Dataset (CSV)",
+        data=df.to_csv(index=False),
+        file_name='Airline_review.csv',
+        mime='text/csv'
+    )
+
+    st.markdown('</div>', unsafe_allow_html=True)
 
     # Data overview box
     st.markdown("""
@@ -163,35 +198,13 @@ if main_section == "HOME":
     with st.expander("📂 View more"):
         st.markdown("### Dimensions")
         st.markdown("""
-        - **Airline Name**: The name of the airline being reviewed ➝ *Text*  
-        - **Review Title**: A short title summarizing the passenger's review ➝ *Text*  
-        - **Review Date**: The date on which the review was submitted ➝ *Date*  
-        - **Verified**: Indicates whether the reviewer is verified ➝ *Boolean*  
-        - **Aircraft**: The type of aircraft used for the flight ➝ *Text*  
-        - **Type of Traveller**: Identifies whether the passenger is a leisure traveler, business traveler, or frequent flyer ➝ *Text*  
-        - **Seat Type**: The travel class selected by the passenger (Economy, Business, First) ➝ *Text*  
-        - **Route**: The flight's origin and destination ➝ *Text*  
-        - **Date Flown**: The month and year the flight took place ➝ *Date*
+        - **Airline Name**: The name of the airline being reviewed ➝ *Text* - **Review Title**: A short title summarizing the passenger's review ➝ *Text* - **Review Date**: The date on which the review was submitted ➝ *Date* - **Verified**: Indicates whether the reviewer is verified ➝ *Boolean* - **Aircraft**: The type of aircraft used for the flight ➝ *Text* - **Type of Traveller**: Identifies whether the passenger is a leisure traveler, business traveler, or frequent flyer ➝ *Text* - **Seat Type**: The travel class selected by the passenger (Economy, Business, First) ➝ *Text* - **Route**: The flight's origin and destination ➝ *Text* - **Date Flown**: The month and year the flight took place ➝ *Date*
         """)
 
         st.markdown("### Measures")
         st.markdown("""
-        - **Overall Rating**: The passenger's overall rating of the flight experience (out of 9) ➝ *Number*  
-        - **Seat Comfort**: The passenger's rating of seat comfort (out of 5) ➝ *Number*  
-        - **Cabin Staff Service**: The passenger's rating of the cabin crew service (out of 5) ➝ *Number*  
-        - **Food & Beverages**: The passenger's rating of food and beverage quality (out of 5) ➝ *Number*  
-        - **Ground Service**: The passenger's rating of airport and ground services (out of 5) ➝ *Number*  
-        - **Inflight Entertainment**: The passenger's rating of entertainment options during the flight (out of 5) ➝ *Number*  
-        - **WiFi & Connectivity**: The passenger's rating of onboard WiFi service (out of 5) ➝ *Number*  
-        - **Value For Money**: The passenger's rating of whether the service was worth the price (out of 5) ➝ *Number*  
-        - **Recommended**: Indicates whether the passenger recommends the airline ➝ *Boolean*  
-        - **Cleaned Review**: A pre-processed version of the review text ➝ *Text*  
-        - **Sentiment Score**: A numerical score reflecting the sentiment of the review ➝ *Number*  
-        - **Text Sentiment**: A categorical classification of the review sentiment (Positive, Negative) ➝ *Text*
+        - **Overall Rating**: The passenger's overall rating of the flight experience (out of 9) ➝ *Number* - **Seat Comfort**: The passenger's rating of seat comfort (out of 5) ➝ *Number* - **Cabin Staff Service**: The passenger's rating of the cabin crew service (out of 5) ➝ *Number* - **Food & Beverages**: The passenger's rating of food and beverage quality (out of 5) ➝ *Number* - **Ground Service**: The passenger's rating of airport and ground services (out of 5) ➝ *Number* - **Inflight Entertainment**: The passenger's rating of entertainment options during the flight (out of 5) ➝ *Number* - **WiFi & Connectivity**: The passenger's rating of onboard WiFi service (out of 5) ➝ *Number* - **Value For Money**: The passenger's rating of whether the service was worth the price (out of 5) ➝ *Number* - **Recommended**: Indicates whether the passenger recommends the airline ➝ *Boolean* - **Cleaned Review**: A pre-processed version of the review text ➝ *Text* - **Sentiment Score**: A numerical score reflecting the sentiment of the review ➝ *Number* - **Text Sentiment**: A categorical classification of the review sentiment (Positive, Negative) ➝ *Text*
         """)
-
-
-
 
 
 # --- SENTIMENT ANALYSIS SIMULATOR ---
@@ -238,7 +251,8 @@ elif main_section == "Sentiment Analysis Simulator":
             else:
                 st.warning("Please enter a review to analyze.")
 
-        encoded_image = get_base64_image("SA_new.jpg")
+        # CHANGED: Image path now includes the 'picture' folder
+        encoded_image = get_base64_image(os.path.join("picture", "SA_new.jpg"))
         st.markdown(
             f"""
             <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
@@ -312,8 +326,8 @@ elif main_section == "Business Intelligence Dashboards":
             """
             <div style="text-align: center;">
                 <iframe width="1000" height="600" src="https://lookerstudio.google.com/embed/reporting/f094873b-2f4b-4177-8dda-bac09fafb8e6/page/MtqHF"
-                        frameborder="0" style="border:0;" allowfullscreen 
-                        sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
+                            frameborder="0" style="border:0;" allowfullscreen 
+                            sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
                 </iframe>
             </div>
             """,
@@ -329,7 +343,7 @@ elif main_section == "Business Intelligence Dashboards":
             """
             <div style="text-align: center;">
                 <iframe src="https://lookerstudio.google.com/embed/reporting/bbde1870-b31b-4b0b-926b-f28f040ae8e2/page/SZgIF"
-                        width="1000" height="600" style="border:none;">
+                            width="1000" height="600" style="border:none;">
                 </iframe>
             </div>
             """,
@@ -345,7 +359,7 @@ elif main_section == "Business Intelligence Dashboards":
             """
             <div style="text-align: center;">
                 <iframe src="https://lookerstudio.google.com/embed/reporting/b5f009bf-6c85-41b0-b70e-af26d686eb68/page/G6bFF"
-                        width="1000" height="600" style="border:none;">
+                            width="1000" height="600" style="border:none;">
                 </iframe>
             </div>
             """,
