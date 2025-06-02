@@ -3,7 +3,6 @@ import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import pandas as pd
 import base64
-import os # Import the os module for path manipulation
 
 st.set_page_config(layout="wide", initial_sidebar_state="expanded")
 
@@ -106,8 +105,8 @@ except Exception as e:
     st.stop()
 
 # 🟦 Main Sidebar Navigation (Cubes now added in the same level)
-st.sidebar.title("Navigation")
-main_section = st.sidebar.radio("Choose Section", ["HOME", "Sentiment Analysis Simulator", "CUBES", "Business Intelligence Dashboards"])
+st.sidebar.title("☰")
+main_section = st.sidebar.radio("Choose Section", ["Sentiment Analysis Simulator", "Business Intelligence Dashboards", "About US"])
 
 def get_base64_image(image_path):
     with open(image_path, "rb") as f:
@@ -122,9 +121,178 @@ def sentiment_analyzer(text):
     prediction = torch.argmax(outputs.logits, dim=-1).item()
     return prediction, positive_score
 
-# --- HOME PAGE ---
-if main_section == "HOME":
-    show_breadcrumbs(["HOME"])
+
+
+# --- SENTIMENT ANALYSIS SIMULATOR ---
+if main_section == "Sentiment Analysis Simulator":
+    tabs = ["Sentiment Exploration", "Review History"]
+    if "active_tab" not in st.session_state:
+        st.session_state.active_tab = "Sentiment Exploration"
+
+    #show_breadcrumbs(["Sentiment Analysis Simulator", st.session_state.active_tab])
+
+    cols = st.columns(len(tabs))
+    for idx, tab in enumerate(tabs):
+        is_selected = (tab == st.session_state.active_tab)
+        tab_class = "tab selected" if is_selected else "tab"
+        with cols[idx]:
+            if st.button(tab, key=f"tab_{tab}"):
+                st.session_state.active_tab = tab
+
+    if st.session_state.active_tab == "Sentiment Exploration":
+        st.markdown("<h2>Sentiment Exploration</h2>", unsafe_allow_html=True)
+
+        user_input = st.text_area("Enter your review here:")
+
+        if 'history' not in st.session_state:
+            st.session_state.history = []
+
+        if st.button("Analyze Sentiment"):
+            if user_input:
+                sentiment, score = sentiment_analyzer(user_input)
+                sentiment_label = "Positive 😊" if sentiment == 1 else "Negative 😞"
+                prediction_color = "#66cc66" if sentiment == 1 else "#ff6666"
+
+                st.markdown(f"""
+                    <div style="background-color:{prediction_color}; padding: 10px; border-radius: 5px; color: white; text-align: center;margin-bottom: 30px;">
+                        <h4>Prediction: {sentiment_label} (Score: {score:.2f})</h4>
+                    </div>
+                """, unsafe_allow_html=True)
+
+                st.session_state.history.append({
+                    "Review": user_input,
+                    "Sentiment": sentiment_label,
+                    "Score": score
+                })
+            else:
+                st.warning("Please enter a review to analyze.")
+
+        encoded_image = get_base64_image("picture/SA_new.jpg")
+        st.markdown(
+            f"""
+            <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
+                <img src="data:image/jpg;base64,{encoded_image}" style="width: 80%; max-width: 1000px; border-radius: 10px;" />
+            </div>
+            <div style="display: flex; justify-content: center; align-items: center; width: 100%; margin-bottom: 15px;">
+                <p style="font-size:13px; text-align:center; color:gray;">Illustration by Yarin Horev on Ideogram (March 20, 2025)</p>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+    elif st.session_state.active_tab == "Review History":
+        st.markdown("<h2>Review History</h2>", unsafe_allow_html=True)
+
+        if 'history' not in st.session_state or not st.session_state.history:
+            st.info("No history available. Analyze some reviews first.")
+        else:
+            history_df = pd.DataFrame(st.session_state.history)
+            if "Score" in history_df.columns:
+                history_df = history_df[["Review", "Sentiment", "Score"]]
+            st.dataframe(history_df)
+
+
+
+
+# --- BUSINESS INTELLIGENCE DASHBOARDS ---
+elif main_section == "Business Intelligence Dashboards":
+    dashboard_page = st.sidebar.radio(
+        "Select a BI Dashboard",
+        ["CUBES","Sentiment Trends", "Route Insights", "Traveller & Seat Type"]
+    )
+
+        # --- CUBES ---
+    if dashboard_page == "CUBES":
+        show_breadcrumbs(["Business Intelligence Dashboards", "CUBES"])
+        st.markdown("<h2>CUBES</h2>", unsafe_allow_html=True)
+        st.markdown(
+            """
+            <div style="text-align: center;">
+                <iframe src="https://lookerstudio.google.com/embed/reporting/2d9ea746-16e6-45fa-bb99-a524bd0ca2b7/page/EM0FF"
+                        width="1000" height="600" style="border:none;">
+                </iframe>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        st.markdown("""
+        <div style="max-width: 700px; margin: auto; font-family: Arial, sans-serif;">
+
+        <p><p>The Cube above visualizes the key Dimensions used in our Business Intelligence Dashboards.</p>
+
+        <p>Part of the hierarchy are Servive Categories which we decided to divide into Satisfaction of Air and Ground Crew Staff and Satisfaction of Additional Services for more acurate analysis over the different traveller and seat types.</p>
+            The category of Satisfaction of Air and Ground Crew Staff include:</p>
+
+        <ul style="list-style-type: disc; padding-left: 20px; margin: 0 auto; text-align: left; display: inline-block;">
+            <li>Ground Service</li>
+            <li>Cabin Staff Service</li>
+
+        </ul>
+        </p>The category of Satisfaction of Additional Services include:</p>
+
+        <ul style="list-style-type: disc; padding-left: 20px; margin: 0 auto; text-align: left; display: inline-block;">
+            <li>Seat Comfort</li>
+            <li>Wifi Connectivity</li>
+            <li>Food & Beverage</li>
+            <li>Inflight Entertainment</li>
+            <li>Value for Money</li>
+        </ul>
+
+        </div>
+        """, unsafe_allow_html=True)
+
+    elif dashboard_page == "Sentiment Trends":
+        show_breadcrumbs(["Business Intelligence Dashboards","CUBES","Sentiment Trends"])
+
+        st.markdown("<h2>Sentiment Trends</h2>", unsafe_allow_html=True)
+        st.markdown(
+            """
+            <div style="text-align: center;">
+                <iframe width="1000" height="600" src="https://lookerstudio.google.com/embed/reporting/f094873b-2f4b-4177-8dda-bac09fafb8e6/page/MtqHF"
+                        frameborder="0" style="border:0;" allowfullscreen 
+                        sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
+                </iframe>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        st.write("Insights on sentiment and customer experience metrics. An overview on sentiment trends over time.")
+
+    elif dashboard_page == "Traveller & Seat Type":
+        show_breadcrumbs(["Business Intelligence Dashboards", "CUBES", "Traveller & Seat Type"])
+
+        st.markdown("<h2>Traveller & Seat Type</h2>", unsafe_allow_html=True)
+        st.markdown(
+            """
+            <div style="text-align: center;">
+                <iframe src="https://lookerstudio.google.com/embed/reporting/bbde1870-b31b-4b0b-926b-f28f040ae8e2/page/SZgIF"
+                        width="1000" height="600" style="border:none;">
+                </iframe>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        st.write("Analysis of sentiment and satisfaction based on traveller types (e.g., business, leisure).")
+
+    elif dashboard_page == "Route Insights":
+        show_breadcrumbs(["Business Intelligence Dashboards","CUBES", "Route Insights"])
+
+        st.markdown("<h2>Route Insights</h2>", unsafe_allow_html=True)
+        st.markdown(
+            """
+            <div style="text-align: center;">
+                <iframe src="https://lookerstudio.google.com/embed/reporting/b5f009bf-6c85-41b0-b70e-af26d686eb68/page/G6bFF"
+                        width="1000" height="600" style="border:none;">
+                </iframe>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        st.write("Insights to route-specific review patterns and satisfaction levels of airline customers.")
+
+# --- Aboout US PAGE ---
+elif main_section == "About US":
+    #show_breadcrumbs(["HOME"])
 
     st.markdown("<h2>Voice of the Customer in Aviation</h2>", unsafe_allow_html=True)
 
@@ -138,8 +306,7 @@ if main_section == "HOME":
             With this, airlines can enhance services, boost satisfaction, and stay ahead in a competitive market.</p>
         </div>
         """, unsafe_allow_html=True)
-    # CHANGED: Image path now includes the 'picture' folder
-    encoded_image = get_base64_image(os.path.join("picture", "new_home_pic.jpg")) 
+    encoded_image = get_base64_image("picture/new_home_pic.jpg")
 
     st.markdown(
         f"""
@@ -155,7 +322,7 @@ if main_section == "HOME":
     )
 
     st.write("""
-        
+       
         
     """)
 
@@ -198,171 +365,32 @@ if main_section == "HOME":
     with st.expander("📂 View more"):
         st.markdown("### Dimensions")
         st.markdown("""
-        - **Airline Name**: The name of the airline being reviewed ➝ *Text* - **Review Title**: A short title summarizing the passenger's review ➝ *Text* - **Review Date**: The date on which the review was submitted ➝ *Date* - **Verified**: Indicates whether the reviewer is verified ➝ *Boolean* - **Aircraft**: The type of aircraft used for the flight ➝ *Text* - **Type of Traveller**: Identifies whether the passenger is a leisure traveler, business traveler, or frequent flyer ➝ *Text* - **Seat Type**: The travel class selected by the passenger (Economy, Business, First) ➝ *Text* - **Route**: The flight's origin and destination ➝ *Text* - **Date Flown**: The month and year the flight took place ➝ *Date*
+        - **Airline Name**: The name of the airline being reviewed ➝ *Text*  
+        - **Review Title**: A short title summarizing the passenger's review ➝ *Text*  
+        - **Review Date**: The date on which the review was submitted ➝ *Date*  
+        - **Verified**: Indicates whether the reviewer is verified ➝ *Boolean*  
+        - **Aircraft**: The type of aircraft used for the flight ➝ *Text*  
+        - **Type of Traveller**: Identifies whether the passenger is a leisure traveler, business traveler, or frequent flyer ➝ *Text*  
+        - **Seat Type**: The travel class selected by the passenger (Economy, Business, First) ➝ *Text*  
+        - **Route**: The flight's origin and destination ➝ *Text*  
+        - **Date Flown**: The month and year the flight took place ➝ *Date*
         """)
 
         st.markdown("### Measures")
         st.markdown("""
-        - **Overall Rating**: The passenger's overall rating of the flight experience (out of 9) ➝ *Number* - **Seat Comfort**: The passenger's rating of seat comfort (out of 5) ➝ *Number* - **Cabin Staff Service**: The passenger's rating of the cabin crew service (out of 5) ➝ *Number* - **Food & Beverages**: The passenger's rating of food and beverage quality (out of 5) ➝ *Number* - **Ground Service**: The passenger's rating of airport and ground services (out of 5) ➝ *Number* - **Inflight Entertainment**: The passenger's rating of entertainment options during the flight (out of 5) ➝ *Number* - **WiFi & Connectivity**: The passenger's rating of onboard WiFi service (out of 5) ➝ *Number* - **Value For Money**: The passenger's rating of whether the service was worth the price (out of 5) ➝ *Number* - **Recommended**: Indicates whether the passenger recommends the airline ➝ *Boolean* - **Cleaned Review**: A pre-processed version of the review text ➝ *Text* - **Sentiment Score**: A numerical score reflecting the sentiment of the review ➝ *Number* - **Text Sentiment**: A categorical classification of the review sentiment (Positive, Negative) ➝ *Text*
+        - **Overall Rating**: The passenger's overall rating of the flight experience (out of 9) ➝ *Number*  
+        - **Seat Comfort**: The passenger's rating of seat comfort (out of 5) ➝ *Number*  
+        - **Cabin Staff Service**: The passenger's rating of the cabin crew service (out of 5) ➝ *Number*  
+        - **Food & Beverages**: The passenger's rating of food and beverage quality (out of 5) ➝ *Number*  
+        - **Ground Service**: The passenger's rating of airport and ground services (out of 5) ➝ *Number*  
+        - **Inflight Entertainment**: The passenger's rating of entertainment options during the flight (out of 5) ➝ *Number*  
+        - **WiFi & Connectivity**: The passenger's rating of onboard WiFi service (out of 5) ➝ *Number*  
+        - **Value For Money**: The passenger's rating of whether the service was worth the price (out of 5) ➝ *Number*  
+        - **Recommended**: Indicates whether the passenger recommends the airline ➝ *Boolean*  
+        - **Cleaned Review**: A pre-processed version of the review text ➝ *Text*  
+        - **Sentiment Score**: A numerical score reflecting the sentiment of the review ➝ *Number*  
+        - **Text Sentiment**: A categorical classification of the review sentiment (Positive, Negative) ➝ *Text*
         """)
 
 
-# --- SENTIMENT ANALYSIS SIMULATOR ---
-elif main_section == "Sentiment Analysis Simulator":
-    tabs = ["Sentiment Exploration", "Review History"]
-    if "active_tab" not in st.session_state:
-        st.session_state.active_tab = "Sentiment Exploration"
 
-    show_breadcrumbs(["HOME", "Sentiment Analysis Simulator", st.session_state.active_tab])
-
-    cols = st.columns(len(tabs))
-    for idx, tab in enumerate(tabs):
-        is_selected = (tab == st.session_state.active_tab)
-        tab_class = "tab selected" if is_selected else "tab"
-        with cols[idx]:
-            if st.button(tab, key=f"tab_{tab}"):
-                st.session_state.active_tab = tab
-
-    if st.session_state.active_tab == "Sentiment Exploration":
-        st.markdown("<h2>Sentiment Exploration</h2>", unsafe_allow_html=True)
-
-        user_input = st.text_area("Enter your review here:")
-
-        if 'history' not in st.session_state:
-            st.session_state.history = []
-
-        if st.button("Analyze Sentiment"):
-            if user_input:
-                sentiment, score = sentiment_analyzer(user_input)
-                sentiment_label = "Positive 😊" if sentiment == 1 else "Negative 😞"
-                prediction_color = "#66cc66" if sentiment == 1 else "#ff6666"
-
-                st.markdown(f"""
-                    <div style="background-color:{prediction_color}; padding: 10px; border-radius: 5px; color: white; text-align: center;margin-bottom: 30px;">
-                        <h4>Prediction: {sentiment_label} (Score: {score:.2f})</h4>
-                    </div>
-                """, unsafe_allow_html=True)
-
-                st.session_state.history.append({
-                    "Review": user_input,
-                    "Sentiment": sentiment_label,
-                    "Score": score
-                })
-            else:
-                st.warning("Please enter a review to analyze.")
-
-        # CHANGED: Image path now includes the 'picture' folder
-        encoded_image = get_base64_image(os.path.join("picture", "SA_new.jpg"))
-        st.markdown(
-            f"""
-            <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
-                <img src="data:image/jpg;base64,{encoded_image}" style="width: 80%; max-width: 1000px; border-radius: 10px;" />
-            </div>
-            <div style="display: flex; justify-content: center; align-items: center; width: 100%; margin-bottom: 15px;">
-                <p style="font-size:13px; text-align:center; color:gray;">Illustration by Yarin Horev on Ideogram (March 20, 2025)</p>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-    elif st.session_state.active_tab == "Review History":
-        st.markdown("<h2>Review History</h2>", unsafe_allow_html=True)
-
-        if 'history' not in st.session_state or not st.session_state.history:
-            st.info("No history available. Analyze some reviews first.")
-        else:
-            history_df = pd.DataFrame(st.session_state.history)
-            if "Score" in history_df.columns:
-                history_df = history_df[["Review", "Sentiment", "Score"]]
-            st.dataframe(history_df)
-
-# --- CUBES ---
-elif main_section == "CUBES":
-    show_breadcrumbs(["HOME", "CUBES"])
-    st.markdown("<h2>CUBES</h2>", unsafe_allow_html=True)
-    st.markdown(
-        """
-        <div style="text-align: center;">
-            <iframe src="https://lookerstudio.google.com/embed/reporting/2d9ea746-16e6-45fa-bb99-a524bd0ca2b7/page/EM0FF"
-                    width="1000" height="600" style="border:none;">
-            </iframe>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-    st.markdown("""
-    <div style="max-width: 700px; margin: auto; font-family: Arial, sans-serif;">
-
-    <p>The Cube above visualizes the key Dimensions used in our Business Intelligence Dashboards.</p>
-
-    <p>Part of the hierarchy are **Service Categories**, which represent the specific aspects of the customer experience that were rated. These categories include:</p>
-
-    <ul style="list-style-type: disc; padding-left: 20px; margin: 0 auto; text-align: left; display: inline-block;">
-        <li>Seat Comfort</li>
-        <li>Wifi Connectivity</li>
-        <li>Ground Service</li>
-        <li>Food & Beverage</li>
-        <li>Cabin Staff Service</li>
-        <li>Inflight Entertainment</li>
-        <li>Value for Money</li>
-    </ul>
-
-    </div>
-    """, unsafe_allow_html=True)
-
-
-# --- BUSINESS INTELLIGENCE DASHBOARDS ---
-elif main_section == "Business Intelligence Dashboards":
-    dashboard_page = st.sidebar.radio(
-        "Select a BI Dashboard",
-        ["Sentiment Trends", "Route Insights", "Traveller Type Analysis"]
-    )
-
-    if dashboard_page == "Sentiment Trends":
-        show_breadcrumbs(["HOME", "Business Intelligence Dashboards", "Sentiment Trends"])
-
-        st.markdown("<h2>Sentiment Trends</h2>", unsafe_allow_html=True)
-        st.markdown(
-            """
-            <div style="text-align: center;">
-                <iframe width="1000" height="600" src="https://lookerstudio.google.com/embed/reporting/f094873b-2f4b-4177-8dda-bac09fafb8e6/page/MtqHF"
-                            frameborder="0" style="border:0;" allowfullscreen 
-                            sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
-                </iframe>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-        st.write("Insights on sentiment and customer experience metrics. An overview on sentiment trends over time.")
-
-    elif dashboard_page == "Traveller Type Analysis":
-        show_breadcrumbs(["HOME", "Business Intelligence Dashboards", "Traveller Type Analysis"])
-
-        st.markdown("<h2>Traveller Type Analysis</h2>", unsafe_allow_html=True)
-        st.markdown(
-            """
-            <div style="text-align: center;">
-                <iframe src="https://lookerstudio.google.com/embed/reporting/bbde1870-b31b-4b0b-926b-f28f040ae8e2/page/SZgIF"
-                            width="1000" height="600" style="border:none;">
-                </iframe>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-        st.write("Analysis of sentiment and satisfaction based on traveller types (e.g., business, leisure).")
-
-    elif dashboard_page == "Route Insights":
-        show_breadcrumbs(["HOME", "Business Intelligence Dashboards", "Route Insights"])
-
-        st.markdown("<h2>Route Insights</h2>", unsafe_allow_html=True)
-        st.markdown(
-            """
-            <div style="text-align: center;">
-                <iframe src="https://lookerstudio.google.com/embed/reporting/b5f009bf-6c85-41b0-b70e-af26d686eb68/page/G6bFF"
-                            width="1000" height="600" style="border:none;">
-                </iframe>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-        st.write("Insights to route-specific review patterns and satisfaction levels of airline customers.")
