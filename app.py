@@ -195,7 +195,7 @@ if main_section == "Sentiment Analysis Simulator":
 elif main_section == "Cubes":
     dashboard_page = st.sidebar.radio(
         "Select a Cube",
-        ["Cube #1 Sentiment Trends", "Cube #2 Routes Insights", "Cube #3 Traveller & Seat Type"]
+        ["Cube #1 Sentiment Trends", "Cube #2 Traveller & Seat Type",  "Cube #3 Routes Insights",]
     )
 
     if dashboard_page == "Cube #1 Sentiment Trends":
@@ -265,7 +265,7 @@ elif main_section == "Cubes":
         )
         st.markdown("""
         <div style="max-width: 700px; margin: auto; font-family: Arial, sans-serif;">
-        <p>The Cube above visualizes the Most Flown Routes in different Airlines together with the percentages of satisfaction.</p>
+        <p>The Cube above visualizes the Most Flown Routes in different Airlines together with the Percentages of Satisfaction and Dissatisfaction.</p>
         </div>
         """, unsafe_allow_html=True)
 
