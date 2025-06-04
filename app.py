@@ -193,14 +193,13 @@ if main_section == "Sentiment Analysis Simulator":
 
 # --- Cubes ---
 elif main_section == "Cubes":
-    dashboard_page = st.sidebar.radio(
+      dashboard_page = st.sidebar.radio(
         "Select a Cube",
         ["Cube #1 Sentiment Trends", "Cube #2 Routes Insights", "Cube #3 Traveller & Seat Type"]
     )
-
         # --- CUBES ---
-    if dashboard_page == "Cube #1 Sentiment Trend":
-        st.markdown("<h2>Cube - Sentiment Trend/h2>", unsafe_allow_html=True)
+    if dashboard_page == "Cube #1 Sentiment Trends":
+        st.markdown("<h2>Cube - Sentiment Trend</h2>", unsafe_allow_html=True)
         st.markdown(
             """
             <div style="text-align: center;">
