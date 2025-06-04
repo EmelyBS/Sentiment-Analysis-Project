@@ -106,7 +106,7 @@ except Exception as e:
 
 # 🟦 Main Sidebar Navigation (Cubes now added in the same level)
 st.sidebar.title("☰")
-main_section = st.sidebar.radio("Choose Section", ["Sentiment Analysis Simulator", "Business Intelligence Dashboards", "About US"])
+main_section = st.sidebar.radio("Choose Section", ["Sentiment Analysis Simulator", "Cubes", "Business Intelligence Dashboards", "About US"])
 
 def get_base64_image(image_path):
     with open(image_path, "rb") as f:
@@ -191,24 +191,20 @@ if main_section == "Sentiment Analysis Simulator":
                 history_df = history_df[["Review", "Sentiment", "Score"]]
             st.dataframe(history_df)
 
-
-
-
-# --- BUSINESS INTELLIGENCE DASHBOARDS ---
-elif main_section == "Business Intelligence Dashboards":
+# --- Cubes ---
+elif main_section == "Cubes":
     dashboard_page = st.sidebar.radio(
-        "Select a BI Dashboard",
-        ["CUBES","Sentiment Trends", "Route Insights", "Traveller & Seat Type"]
+        "Select a Cube",
+        ["Cube #1 Sentiment Trends", "Cube #2 Routes Insights", "Cube #3 Traveller & Seat Type"]
     )
 
         # --- CUBES ---
-    if dashboard_page == "CUBES":
-        show_breadcrumbs(["Business Intelligence Dashboards", "CUBES"])
-        st.markdown("<h2>CUBES</h2>", unsafe_allow_html=True)
+    if dashboard_page == "Cube #1 Sentiment Trend":
+        st.markdown("<h2>Cube - Sentiment Trend/h2>", unsafe_allow_html=True)
         st.markdown(
             """
             <div style="text-align: center;">
-                <iframe src="https://lookerstudio.google.com/embed/reporting/2d9ea746-16e6-45fa-bb99-a524bd0ca2b7/page/EM0FF"
+                <iframe src="https://lookerstudio.google.com/embed/reporting/be04f91e-5384-4633-978b-c3d5787e876d/page/G6bFF"
                         width="1000" height="600" style="border:none;">
                 </iframe>
             </div>
@@ -218,9 +214,33 @@ elif main_section == "Business Intelligence Dashboards":
         st.markdown("""
         <div style="max-width: 700px; margin: auto; font-family: Arial, sans-serif;">
 
-        <p><p>The Cube above visualizes the key Dimensions used in our Business Intelligence Dashboards.</p>
+        <p><p>The Cube above visualizes the Dimensions used in our Business Intelligence Dashboards representing Sentiment Analysis in Aviation overall.</p>
 
-        <p>Part of the hierarchy are Servive Categories which we decided to divide into Satisfaction of Air and Ground Crew Staff and Satisfaction of Additional Services for more acurate analysis over the different traveller and seat types.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    elif dashboard_page == "Cube #2 Traveller & Seat Type":
+        #show_breadcrumbs(["Business Intelligence Dashboards","CUBES","Sentiment Trends"])
+
+        st.markdown("<h2>Cube - Traveller & Seat Types</h2>", unsafe_allow_html=True)
+        st.markdown(
+            """
+            <div style="text-align: center;">
+                <iframe width="1000" height="600" src="https://lookerstudio.google.com/embed/reporting/be04f91e-5384-4633-978b-c3d5787e876d/page/G6bFF"
+                        frameborder="0" style="border:0;" allowfullscreen 
+                        sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
+                </iframe>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        
+
+        st.markdown("""
+        <div style="max-width: 700px; margin: auto; font-family: Arial, sans-serif;">
+
+        <p><p>Analysis of sentiment and satisfaction based on Traveller Types (e.g., business, solo/couple/family leisure) and their Seat Type.
+        Part of the different parameters the customer gave their ratings are Servive Categories which we decided to divide into Satisfaction of Air and Ground Crew Staff and Satisfaction of Additional Services for more acurate analysis over the different traveller and seat types.</p>
             The category of Satisfaction of Air and Ground Crew Staff include:</p>
 
         <ul style="list-style-type: disc; padding-left: 20px; margin: 0 auto; text-align: left; display: inline-block;">
@@ -240,9 +260,39 @@ elif main_section == "Business Intelligence Dashboards":
 
         </div>
         """, unsafe_allow_html=True)
+        # --- CUBES ---
+    elif dashboard_page == "Cube #3 Routes Insights":
+        #show_breadcrumbs(["Business Intelligence Dashboards", "CUBES"])
+        st.markdown("<h2>Cube - Routes Insights</h2>", unsafe_allow_html=True)
+        st.markdown(
+            """
+            <div style="text-align: center;">
+                <iframe src="https://lookerstudio.google.com/embed/reporting/be04f91e-5384-4633-978b-c3d5787e876d/page/G6bFF"
+                        width="1000" height="600" style="border:none;">
+                </iframe>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        st.markdown("""
+        <div style="max-width: 700px; margin: auto; font-family: Arial, sans-serif;">
 
-    elif dashboard_page == "Sentiment Trends":
-        show_breadcrumbs(["Business Intelligence Dashboards","CUBES","Sentiment Trends"])
+        <p><p>The Cube above visualizes the Most Flown Routes in different Airlines together with the percetages of satisfaction.</p>
+
+        </div>
+        """, unsafe_allow_html=True)
+
+ 
+  
+# --- BUSINESS INTELLIGENCE DASHBOARDS ---
+elif main_section == "Business Intelligence Dashboards":
+    dashboard_page = st.sidebar.radio(
+        "Select a BI Dashboard",
+        ["Sentiment Trends", "Route Insights", "Traveller & Seat Type"]
+    )
+
+    if dashboard_page == "Sentiment Trends":
+        show_breadcrumbs(["Business Intelligence Dashboards","Cube #1","Sentiment Trends"])
 
         st.markdown("<h2>Sentiment Trends</h2>", unsafe_allow_html=True)
         st.markdown(
@@ -259,7 +309,7 @@ elif main_section == "Business Intelligence Dashboards":
         st.write("Insights on sentiment and customer experience metrics. An overview on sentiment trends over time.")
 
     elif dashboard_page == "Traveller & Seat Type":
-        show_breadcrumbs(["Business Intelligence Dashboards", "CUBES", "Traveller & Seat Type"])
+        show_breadcrumbs(["Business Intelligence Dashboards", "Cube #2", "Traveller & Seat Type"])
 
         st.markdown("<h2>Traveller & Seat Type</h2>", unsafe_allow_html=True)
         st.markdown(
@@ -275,7 +325,7 @@ elif main_section == "Business Intelligence Dashboards":
         st.write("Analysis of sentiment and satisfaction based on traveller types (e.g., business, leisure).")
 
     elif dashboard_page == "Route Insights":
-        show_breadcrumbs(["Business Intelligence Dashboards","CUBES", "Route Insights"])
+        show_breadcrumbs(["Business Intelligence Dashboards","Cube #3", "Route Insights"])
 
         st.markdown("<h2>Route Insights</h2>", unsafe_allow_html=True)
         st.markdown(
