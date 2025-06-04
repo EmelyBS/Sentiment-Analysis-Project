@@ -193,11 +193,11 @@ if main_section == "Sentiment Analysis Simulator":
 
 # --- Cubes ---
 elif main_section == "Cubes":
-      dashboard_page = st.sidebar.radio(
+    dashboard_page = st.sidebar.radio(
         "Select a Cube",
         ["Cube #1 Sentiment Trends", "Cube #2 Routes Insights", "Cube #3 Traveller & Seat Type"]
     )
-        # --- CUBES ---
+
     if dashboard_page == "Cube #1 Sentiment Trends":
         st.markdown("<h2>Cube - Sentiment Trend</h2>", unsafe_allow_html=True)
         st.markdown(
@@ -212,15 +212,11 @@ elif main_section == "Cubes":
         )
         st.markdown("""
         <div style="max-width: 700px; margin: auto; font-family: Arial, sans-serif;">
-
-        <p><p>The Cube above visualizes the Dimensions used in our Business Intelligence Dashboards representing Sentiment Analysis in Aviation overall.</p>
-
+        <p>The Cube above visualizes the Dimensions used in our Business Intelligence Dashboards representing Sentiment Analysis in Aviation overall.</p>
         </div>
         """, unsafe_allow_html=True)
 
     elif dashboard_page == "Cube #2 Traveller & Seat Type":
-        #show_breadcrumbs(["Business Intelligence Dashboards","CUBES","Sentiment Trends"])
-
         st.markdown("<h2>Cube - Traveller & Seat Types</h2>", unsafe_allow_html=True)
         st.markdown(
             """
@@ -233,35 +229,29 @@ elif main_section == "Cubes":
             """,
             unsafe_allow_html=True
         )
-        
-
         st.markdown("""
         <div style="max-width: 700px; margin: auto; font-family: Arial, sans-serif;">
+        <p>Analysis of sentiment and satisfaction based on Traveller Types (e.g., business, solo/couple/family leisure) and their Seat Type.
+        Part of the different parameters the customer gave their ratings are Service Categories which we decided to divide into Satisfaction of Air and Ground Crew Staff and Satisfaction of Additional Services for more accurate analysis over the different traveller and seat types.</p>
 
-        <p><p>Analysis of sentiment and satisfaction based on Traveller Types (e.g., business, solo/couple/family leisure) and their Seat Type.
-        Part of the different parameters the customer gave their ratings are Servive Categories which we decided to divide into Satisfaction of Air and Ground Crew Staff and Satisfaction of Additional Services for more acurate analysis over the different traveller and seat types.</p>
-            The category of Satisfaction of Air and Ground Crew Staff include:</p>
-
-        <ul style="list-style-type: disc; padding-left: 20px; margin: 0 auto; text-align: left; display: inline-block;">
+        <p>The category of Satisfaction of Air and Ground Crew Staff includes:</p>
+        <ul style="list-style-type: disc; padding-left: 20px; text-align: left;">
             <li>Ground Service</li>
             <li>Cabin Staff Service</li>
-
         </ul>
-        </p>The category of Satisfaction of Additional Services include:</p>
 
-        <ul style="list-style-type: disc; padding-left: 20px; margin: 0 auto; text-align: left; display: inline-block;">
+        <p>The category of Satisfaction of Additional Services includes:</p>
+        <ul style="list-style-type: disc; padding-left: 20px; text-align: left;">
             <li>Seat Comfort</li>
             <li>Wifi Connectivity</li>
             <li>Food & Beverage</li>
             <li>Inflight Entertainment</li>
             <li>Value for Money</li>
         </ul>
-
         </div>
         """, unsafe_allow_html=True)
-        # --- CUBES ---
+
     elif dashboard_page == "Cube #3 Routes Insights":
-        #show_breadcrumbs(["Business Intelligence Dashboards", "CUBES"])
         st.markdown("<h2>Cube - Routes Insights</h2>", unsafe_allow_html=True)
         st.markdown(
             """
@@ -275,13 +265,10 @@ elif main_section == "Cubes":
         )
         st.markdown("""
         <div style="max-width: 700px; margin: auto; font-family: Arial, sans-serif;">
-
-        <p><p>The Cube above visualizes the Most Flown Routes in different Airlines together with the percetages of satisfaction.</p>
-
+        <p>The Cube above visualizes the Most Flown Routes in different Airlines together with the percentages of satisfaction.</p>
         </div>
         """, unsafe_allow_html=True)
 
- 
   
 # --- BUSINESS INTELLIGENCE DASHBOARDS ---
 elif main_section == "Business Intelligence Dashboards":
