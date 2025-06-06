@@ -211,7 +211,8 @@ elif main_section == "Cubes":
             """,
             unsafe_allow_html=True
         )
-       st.markdown("""
+        
+        st.markdown("""
         <br><br>
         <div style="max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif; text-align: left;">
         
