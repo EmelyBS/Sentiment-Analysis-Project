@@ -212,8 +212,13 @@ elif main_section == "Cubes":
             unsafe_allow_html=True
         )
         st.markdown("""
-        <div style="max-width: 700px; margin: auto; font-family: Arial, sans-serif;">
-        <p>The Cube above visualizes the Dimensions used in our Business Intelligence Dashboards representing Sentiment Analysis in Aviation overall.</p>
+        <div style="max-width: 700px; font-family: Arial, sans-serif; text-align: left;">
+        <p>The Cube above visualizes the structure and dimensions used in our Business Intelligence Dashboards to represent sentiment analysis in the aviation industry.
+        It illustrates the hierarchical approach we used to analyze various parameters in order to gain meaningful insights into sentiment trends across different airlines.
+        The review date provides the basis for the year and month breakdown, helping track trends over time.
+        The service categories represent thematic groupings of aspects that passengers rated based on their travel experience.
+        In this cube, the service categories include:
+        Seat Comfort, Wi-Fi Connectivity, Food & Beverages, Inflight Entertainment, Ground Services, Cabin Crew Service, and Value for Money.
         </div>
         """, unsafe_allow_html=True)
 
@@ -266,8 +271,8 @@ elif main_section == "Cubes":
             unsafe_allow_html=True
         )
         st.markdown("""
-        <div style="max-width: 700px; margin: auto; font-family: Arial, sans-serif;">
-        <p>The Cube above visualizes the Most Flown Routes in different Airlines together with the Percentages of Satisfaction and Dissatisfaction.</p>
+        <div style="max-width: 700px; font-family: Arial, sans-serif; text-align: left;">
+        <p>The Cube above visualizes the most frequently flown routes across different airlines, along with the corresponding percentages of passenger satisfaction and dissatisfaction.</p>
         </div>
         """, unsafe_allow_html=True)
 
