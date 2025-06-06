@@ -214,7 +214,7 @@ elif main_section == "Cubes":
         
         st.markdown("""
         <br><br>
-        <div style="max-width: 100%; margin: 0 auto; font-family: Arial, sans-serif; text-align: left;">
+        <div style="text-align: center;">
         
         <p>The Cube above visualizes the structure and dimensions used in our Business Intelligence Dashboards to represent sentiment analysis in the aviation industry.</p>
         
