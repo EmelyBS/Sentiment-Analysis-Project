@@ -211,14 +211,26 @@ elif main_section == "Cubes":
             """,
             unsafe_allow_html=True
         )
-        st.markdown("""
-        <div style="max-width: 700px; font-family: Arial, sans-serif; text-align: left;">
-        <p>The Cube above visualizes the structure and dimensions used in our Business Intelligence Dashboards to represent sentiment analysis in the aviation industry.
-        It illustrates the hierarchical approach we used to analyze various parameters in order to gain meaningful insights into sentiment trends across different airlines.
-        The review date provides the basis for the year and month breakdown, helping track trends over time.
-        The service categories represent thematic groupings of aspects that passengers rated based on their travel experience.
-        In this cube, the service categories include:
-        Seat Comfort, Wi-Fi Connectivity, Food & Beverages, Inflight Entertainment, Ground Services, Cabin Crew Service, and Value for Money.
+       st.markdown("""
+        <br><br>
+        <div style="max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif; text-align: left;">
+        
+        <p>The Cube above visualizes the structure and dimensions used in our Business Intelligence Dashboards to represent sentiment analysis in the aviation industry.</p>
+        
+        <p>It illustrates the hierarchical approach we used to analyze various parameters to gain meaningful insights into sentiment trends across different airlines. The review date provides the basis for the year and month breakdown, helping track trends over time.</p>
+        
+        <p>The service categories represent thematic groupings of aspects that passengers rated based on their travel experience. In this cube, the service categories include:</p>
+        
+        <ul style="list-style-type: disc; padding-left: 20px;">
+          <li>Seat Comfort</li>
+          <li>Wi-Fi Connectivity</li>
+          <li>Food & Beverages</li>
+          <li>Inflight Entertainment</li>
+          <li>Ground Services</li>
+          <li>Cabin Crew Service</li>
+          <li>Value for Money</li>
+        </ul>
+        
         </div>
         """, unsafe_allow_html=True)
 
