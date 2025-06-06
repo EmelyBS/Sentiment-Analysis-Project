@@ -249,6 +249,7 @@ elif main_section == "Cubes":
             unsafe_allow_html=True
         )
         st.markdown("""
+        <br><br>
         <div style="max-width: 700px; margin: auto; font-family: Arial, sans-serif;">
         
         <p>Analysis of sentiment and satisfaction based on Traveller Types (e.g., business, solo/couple/family leisure) and their Seat Type.
@@ -285,9 +286,14 @@ elif main_section == "Cubes":
             unsafe_allow_html=True
         )
         st.markdown("""
-        <div style="max-width: 700px;  margin: auto; font-family: Arial, sans-serif;">
+        <br><br>
+        <div style="max-width: 700px; margin: auto; font-family: Arial, sans-serif;">
         
-        <p>The Cube above visualizes the most frequently flown routes across different airlines, along with the corresponding percentages of passenger satisfaction and dissatisfaction.</p>
+        <p>The Cube above visualizes the hierarchy we designed to represent the most frequently flown routes and the sentiment associated with them.</p>
+        
+        <p>To achieve this, we focus on the departure and final destination cities, without considering the connection or layover cities. 
+        Our analysis is centered on the complete route as experienced by the passenger, from origin to final arrival.</p>
+        
         </div>
         """, unsafe_allow_html=True)
 
