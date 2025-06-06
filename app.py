@@ -200,6 +200,7 @@ elif main_section == "Cubes":
 
     if dashboard_page == "Cube #1 Sentiment Trends":
         st.markdown("<h2>Cube - Sentiment Trend</h2>", unsafe_allow_html=True)
+
         st.markdown(
             """
             <div style="text-align: center;">
@@ -457,6 +458,3 @@ elif main_section == "About US":
         - **Sentiment Score**: A numerical score reflecting the sentiment of the review ➝ *Number*  
         - **Text Sentiment**: A categorical classification of the review sentiment (Positive, Negative) ➝ *Text*
         """)
-
-
-
