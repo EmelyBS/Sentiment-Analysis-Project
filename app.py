@@ -250,6 +250,7 @@ elif main_section == "Cubes":
         )
         st.markdown("""
         <div style="max-width: 700px; margin: auto; font-family: Arial, sans-serif;">
+        
         <p>Analysis of sentiment and satisfaction based on Traveller Types (e.g., business, solo/couple/family leisure) and their Seat Type.
         Part of the different parameters the customer gave their ratings are Service Categories which we decided to divide into Satisfaction of Air and Ground Crew Staff and Satisfaction of Additional Services for more accurate analysis over the different traveller and seat types.</p>
 
@@ -284,7 +285,8 @@ elif main_section == "Cubes":
             unsafe_allow_html=True
         )
         st.markdown("""
-        <div style="max-width: 700px; font-family: Arial, sans-serif; text-align: left;">
+        <div style="max-width: 700px;  margin: auto; font-family: Arial, sans-serif;">
+        
         <p>The Cube above visualizes the most frequently flown routes across different airlines, along with the corresponding percentages of passenger satisfaction and dissatisfaction.</p>
         </div>
         """, unsafe_allow_html=True)
