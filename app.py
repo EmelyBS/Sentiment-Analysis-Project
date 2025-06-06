@@ -202,7 +202,7 @@ elif main_section == "Cubes":
         st.markdown("<h2>Cube - Sentiment Trend</h2>", unsafe_allow_html=True)
         st.markdown(
             """
-            <div style="text-align: center;">
+            <div style="max-width: 100%; margin: 0 auto; font-family: Arial, sans-serif; text-align: left;">
                 <iframe width="100%" height="800px" src="https://lookerstudio.google.com/embed/reporting/7e010d7d-7eda-45df-83cd-b0c6e682d834/page/EQrHF"
                         frameborder="0" style="border:0; max-width: 100%;" allowfullscreen
                         sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
