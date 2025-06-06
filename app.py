@@ -300,7 +300,7 @@ elif main_section == "Business Intelligence Dashboards":
         show_breadcrumbs(["Business Intelligence Dashboards", "Cube #2", "Traveller & Seat Type"])
 
         st.markdown("<h2>Traveller & Seat Type</h2>", unsafe_allow_html=True)
-          st.markdown(
+        st.markdown(
             """
             <div style="text-align: center;">
                 <iframe width="100%" height="800px" src="https://lookerstudio.google.com/embed/reporting/bbde1870-b31b-4b0b-926b-f28f040ae8e2/page/SZgIF"
