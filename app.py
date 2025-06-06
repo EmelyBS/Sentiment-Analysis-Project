@@ -200,11 +200,12 @@ elif main_section == "Cubes":
 
     if dashboard_page == "Cube #1 Sentiment Trends":
         st.markdown("<h2>Cube - Sentiment Trend</h2>", unsafe_allow_html=True)
-        st.markdown(
+                st.markdown(
             """
             <div style="text-align: center;">
-                <iframe src="https://lookerstudio.google.com/embed/reporting/be04f91e-5384-4633-978b-c3d5787e876d/page/G6bFF"
-                        width="1000" height="600" style="border:none;">
+                <iframe width="100%" height="800px" src="https://lookerstudio.google.com/embed/reporting/7e010d7d-7eda-45df-83cd-b0c6e682d834/page/EQrHF"
+                        frameborder="0" style="border:0; max-width: 100%;" allowfullscreen
+                        sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
                 </iframe>
             </div>
             """,
@@ -221,8 +222,8 @@ elif main_section == "Cubes":
         st.markdown(
             """
             <div style="text-align: center;">
-                <iframe width="1000" height="600" src="https://lookerstudio.google.com/embed/reporting/f1c0d77b-ace8-4d3d-a558-b6fb28c95beb/page/SZgIF"
-                        frameborder="0" style="border:0;" allowfullscreen 
+                <iframe width="100%" height="800" src="https://lookerstudio.google.com/embed/reporting/f1c0d77b-ace8-4d3d-a558-b6fb28c95beb/page/SZgIF"
+                        frameborder="0" style="border:0;max-width: 100%;" allowfullscreen 
                         sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
                 </iframe>
             </div>
@@ -256,8 +257,9 @@ elif main_section == "Cubes":
         st.markdown(
             """
             <div style="text-align: center;">
-                <iframe src="https://lookerstudio.google.com/embed/reporting/be04f91e-5384-4633-978b-c3d5787e876d/page/G6bFF"
-                        width="1000" height="600" style="border:none;">
+                <iframe width="100%" height="800px" src="https://lookerstudio.google.com/embed/reporting/be04f91e-5384-4633-978b-c3d5787e876d/page/G6bFF"
+                        frameborder="0" style="border:0; max-width: 100%;" allowfullscreen
+                        sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
                 </iframe>
             </div>
             """,
@@ -298,11 +300,12 @@ elif main_section == "Business Intelligence Dashboards":
         show_breadcrumbs(["Business Intelligence Dashboards", "Cube #2", "Traveller & Seat Type"])
 
         st.markdown("<h2>Traveller & Seat Type</h2>", unsafe_allow_html=True)
-        st.markdown(
+          st.markdown(
             """
             <div style="text-align: center;">
-                <iframe src="https://lookerstudio.google.com/embed/reporting/bbde1870-b31b-4b0b-926b-f28f040ae8e2/page/SZgIF"
-                        width="1000" height="600" style="border:none;">
+                <iframe width="100%" height="800px" src="https://lookerstudio.google.com/embed/reporting/bbde1870-b31b-4b0b-926b-f28f040ae8e2/page/SZgIF"
+                        frameborder="0" style="border:0; max-width: 100%;" allowfullscreen
+                        sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
                 </iframe>
             </div>
             """,
@@ -314,11 +317,12 @@ elif main_section == "Business Intelligence Dashboards":
         show_breadcrumbs(["Business Intelligence Dashboards","Cube #3", "Route Insights"])
 
         st.markdown("<h2>Route Insights</h2>", unsafe_allow_html=True)
-        st.markdown(
+                st.markdown(
             """
             <div style="text-align: center;">
-                <iframe src="https://lookerstudio.google.com/embed/reporting/b5f009bf-6c85-41b0-b70e-af26d686eb68/page/G6bFF"
-                        width="1000" height="600" style="border:none;">
+                <iframe width="100%" height="800px" src="https://lookerstudio.google.com/embed/reporting/b5f009bf-6c85-41b0-b70e-af26d686eb68/page/G6bFF"
+                        frameborder="0" style="border:0; max-width: 100%;" allowfullscreen
+                        sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
                 </iframe>
             </div>
             """,
