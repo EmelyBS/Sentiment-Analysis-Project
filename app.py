@@ -200,7 +200,7 @@ elif main_section == "Cubes":
 
     if dashboard_page == "Cube #1 Sentiment Trends":
         st.markdown("<h2>Cube - Sentiment Trend</h2>", unsafe_allow_html=True)
-                st.markdown(
+        st.markdown(
             """
             <div style="text-align: center;">
                 <iframe width="100%" height="800px" src="https://lookerstudio.google.com/embed/reporting/7e010d7d-7eda-45df-83cd-b0c6e682d834/page/EQrHF"
