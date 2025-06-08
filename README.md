@@ -82,4 +82,4 @@ Developed as a Capstone Project in Industrial Engineering and Managment speciali
 Author: **Emely Ben-Sadon, Yarin Horev**   
 Director: **Dr. Dima Alberg**   
 
-Tech stack includes: Python, Scikit-learn, PyTorch, Hugging Face Transformers, Matplotlib, and Streamlit.
+Tech stack includes: Python, Scikit-learn, Matplotlib, Pandas, Gspread, PyTorch, Hugging Face Transformers and Streamlit.
