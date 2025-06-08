@@ -67,12 +67,13 @@ The BERT model with the Pre-built Classification Head (Hugging Face) achieved hi
 
 The project is organized as follows:
 
-Airline_review.csv/: Contains raw and processed datasets.
-Sentiment_Analysis_Project_of_Airline_Customer_Review_(B_Sc_)EmelYarin.ipynb/: Jupyter notebook for EDA, model experimentation, training and evaluation.
-best_fine_tuned_bert/: Saved trained model weights and artifacts.
-app.py/: Streamlit application files.
-requirements.txt: List of project dependencies.
-picture/: Project diagrams and visualizations.
+- Airline_review.csv/: Contains raw and processed datasets.
+- Sentiment_Analysis_Project_of_Airline_Customer_Review_(B_Sc_)EmelYarin.ipynb/: Jupyter notebook for EDA, model experimentation, training and evaluation.
+- best_fine_tuned_bert/: Saved trained model weights and artifacts.
+- app.py/: Streamlit application files.
+- requirements.txt: List of project dependencies.
+- devcontainer/: Contains configuration files for a standardized development environment (GitHub Codespaces).
+- picture/: Project diagrams and visualizations.
 
 ## Contributors
 
