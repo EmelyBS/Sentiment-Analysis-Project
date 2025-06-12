@@ -3,7 +3,7 @@
 ## About
 This project explores the application of sentiment analysis on verified airline reviews collected from Skytrax. The aim is to uncover customer sentiment trends and determine key drivers of satisfaction or dissatisfaction, using a range of machine learning and deep learning techniques.
 
-![Sentiment Analysis Project Pipeline](picture/SA_pipeline.png)  
+![Sentiment Analysis Project Pipeline](picture/flowchart_models_project.png)  
 
 *A visual overview of the sentiment analysis pipeline. Created by Emely Ben-Sadon using Eraser.io (an AI tool); April 5, 2025.*
 [View on Eraser![]("https://app.eraser.io/workspace/z48nJv0aMvHimOS8FYfM/preview)](https://app.eraser.io/workspace/z48nJv0aMvHimOS8FYfM)
