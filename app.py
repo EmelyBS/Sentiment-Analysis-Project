@@ -303,7 +303,7 @@ elif main_section == "Cubes":
 elif main_section == "Business Intelligence Dashboards":
     dashboard_page = st.sidebar.radio(
         "Select a BI Dashboard",
-        ["Sentiment Trends", "Route Insights", "Traveller & Seat Type"]
+        ["Sentiment Trends", "Traveller & Seat Type", "Route Insights"]
     )
 
     if dashboard_page == "Sentiment Trends":
