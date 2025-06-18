@@ -204,7 +204,7 @@ elif main_section == "Cubes":
         st.markdown(
             """
             <div style="text-align: center;">
-                <iframe width="100%" height="800px" src="https://lookerstudio.google.com/embed/reporting/7e010d7d-7eda-45df-83cd-b0c6e682d834/page/EQrHF"
+                <iframe width="100%" height="800px" src="https://lookerstudio.google.com/embed/reporting/7ffff1eb-fa40-4a49-b605-2f55ce7cb4d9/page/EQrHF"
                         frameborder="0" style="border:0; max-width: 100%;" allowfullscreen
                         sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
                 </iframe>
@@ -313,7 +313,7 @@ elif main_section == "Business Intelligence Dashboards":
         st.markdown(
             """
             <div style="text-align: center;">
-                <iframe width="100%" height="800px" src="https://lookerstudio.google.com/embed/reporting/f094873b-2f4b-4177-8dda-bac09fafb8e6/page/MtqHF"
+                <iframe width="100%" height="800px" src="https://lookerstudio.google.com/embed/reporting/339fa4f4-d95a-407a-a7a5-7ee2ea83f614/page/p_48357myjtd"
                         frameborder="0" style="border:0; max-width: 100%;" allowfullscreen
                         sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
                 </iframe>
