@@ -330,7 +330,7 @@ elif main_section == "Business Intelligence Dashboards":
         st.markdown(
             """
             <div style="text-align: center;">
-                <iframe width="100%" height="800px" src="https://lookerstudio.google.com/embed/reporting/bbde1870-b31b-4b0b-926b-f28f040ae8e2/page/SZgIF"
+                <iframe width="100%" height="800px" src="https://lookerstudio.google.com/embed/reporting/61df9466-1782-4011-8f75-e5ee358d49d5/page/SZgIF"
                         frameborder="0" style="border:0; max-width: 100%;" allowfullscreen
                         sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
                 </iframe>
